@@ -67,25 +67,35 @@ include_once 'db.php';
         $Page_Start = (($Per_Page * $Page) - $Per_Page);
         if ($_SESSION["Level"] == "admin") {
     ?>
-            <div class="d-flex justify-content-center">
-                <form action="upload.php" method="post" enctype="multipart/form-data">
-                    <div class="row">
-                        <div class="my-5 col-sm-9 col-md-6 col-lg-8 col-xl-10">
-                            <div class="input-group">
-                                <div class="custom-file">
-                                    <input type="file" class="custom-file-input" id="customFileInput" accept=".csv" name="file">
-                                    <label class="custom-file-label" for="customFileInput"></label>
-                                </div>
-                                <div class="input-group-append">
-                                    <button type="submit" name="submit" class="btn btn-primary"> Upload</button>
-                                </div>
+            <br>
+            <form action="upload.php" method="post" enctype="multipart/form-data">
+                <div class="d-flex justify-content-center">
+                    <div class="col">
+                        <div class="input-group">
+                            <div class="custom-file">
+                                <input type="file" class="custom-file-input" id="customFileInput" accept=".csv" name="file">
+                                <label class="custom-file-label" for="customFileInput"></label>
+                            </div>
+                            <div class="input-group-append">
+                                <button type="submit" name="submitcsv" class="btn btn-primary"> Upload</button>
                             </div>
                         </div>
                     </div>
-                </form>
-            </div>
 
-
+                    <div class="col">
+                        <div class="input-group">
+                            <div class="custom-file">
+                                <input type="file" class="custom-file-input" id="customFileInputexcel" accept=".xls,.xlsx" name="excel_file">
+                                <label class="custom-file-label" for="customFileInputexcel"></label>
+                            </div>
+                            <div class="input-group-append">
+                                <button type="submit" name="submitexcel" class="btn btn-primary"> Upload</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+            <br>
             <div class="d-flex justify-content-center">
                 <form action="product.php" method="get">
                     <!-- <label for="product_code">รหัสสินค้า</label>
