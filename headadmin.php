@@ -23,7 +23,7 @@ $level = $_SESSION["Level"];
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/js/bootstrap.bundle.min.js"></script>
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-    <script src='https://kit.fontawesome.com/a076d05399.js' crossorigin='anonymous'></script>
+    
     <style>
         #up {
             margin-left: 123px;
@@ -84,7 +84,7 @@ $level = $_SESSION["Level"];
             <a href='body.php?page=homepage&Page=1'><i class="fa fa-home" style="font-size: 80px;"></i><br>Home</a>
         </div>
         <div class="col">
-            <a href='body.php?page=additi&Page=1'><i class="fa fa-cog" style="font-size: 80px;"></i><br>Additive</a>
+            <a href='additive.php?date=1'><i class="fa fa-cog" style="font-size: 80px;"></i><br>Additive</a>
         </div>
         <div class="col">
             <a href='body.php?page=trackmode&Page=1'><i class="fa fa-truck" style="font-size: 80px;"></i><br>Track Mode</a>

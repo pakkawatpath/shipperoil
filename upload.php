@@ -98,7 +98,7 @@ if (isset($_POST['submitexcel'])) {
         $drivercode = trim($row[8]);
         $tankercode = trim($row[10]);
         $unit = trim($row[12]);
-        $scheduleqty = trim($row[13]);
+        $scheduleqty = trim($row[13]); 
         $loadedobs = trim($row[14]);
         $loadedstd = trim($row[18]);
         $loaded = trim($row[21]);
@@ -125,4 +125,5 @@ if (isset($_POST['submitexcel'])) {
         $conn->query($sql);
     }
 }
+
 header("Location: body.php?page=homepage&Page=1");

@@ -41,21 +41,32 @@ if (isset($_POST['base'])) {
     echo "</script>";
 }
 
-if (isset($_POST['additi'])) {
+if (isset($_POST['daily'])) {
     $shipper = $_POST['shipper'];
-    $product = $_POST['product'];
+    $date = $_POST['date'];
     $received = $_POST['received'];
 
-    $sql = "SELECT * FROM `basename` WHERE `id` = '$product'";
-    $query = mysqli_query($conn, $sql);
-    while ($row = $query->fetch_array()) {
-        $basename = $row['basename'];
-        $drawername = $row['drawername'];
-        $ch = $row['ch'];
-        mysqli_query($conn, "INSERT INTO `addi`(`shipper`, `basename`, `drawername`, `ch`, `received`) VALUES ('$shipper', '$basename', '$drawername', '$ch', '$received')");
-    }
+    mysqli_query($conn, "INSERT INTO `addi`(`shipper`, `date`, `received`) VALUES ('$shipper', '$date', '$received')");
+    
     echo "<script>";
-    echo "window.location.href='body.php?page=additi&Page=1'";
+    echo "window.location.href='additive.php?date=1'";
+    echo "</script>";
+}
+
+if (isset($_POST['month'])) {
+    $shipper = $_POST['shipper'];
+    $month = $_POST['month-year'];
+    $remaining = $_POST['remaining'];
+    $stock = $_POST['stock'];
+    $deadstock = $_POST['deadstock'];
+    $line = $_POST['line'];
+    $total = $_POST['total'];
+    $remark = $_POST['remark'];
+
+    mysqli_query($conn, "INSERT INTO `addimonth`( `shipper`, `monthyear`, `remaining`, `stock`, `deadstock`, `line`, `total`, `remark`) VALUES ('$shipper','$month','$remaining','$stock','$deadstock','$line','$total','$remark')");
+    
+    echo "<script>";
+    echo "window.location.href='additive.php?month-year=1'";
     echo "</script>";
 }
 

@@ -57,7 +57,19 @@ if (isset($_GET['addi'])) {
     $sql = $conn->query("DELETE FROM `addi` WHERE `id` = '$delete'");
     if ($sql) {
         echo "<script>";
-        echo "window.location.href='body.php?page=additi&Page=1'";
+        echo "window.location.href='additive.php?date=1'";
+        echo "</script>";
+    } else {
+        echo "ERROR";
+    }
+}
+
+if (isset($_GET['addimonth'])) {
+    $delete = $conn->real_escape_string($_GET['addimonth']);
+    $sql = $conn->query("DELETE FROM `addimonth` WHERE `id` = '$delete'");
+    if ($sql) {
+        echo "<script>";
+        echo "window.location.href='additive.php?month-year=1'";
         echo "</script>";
     } else {
         echo "ERROR";
@@ -108,7 +120,7 @@ if (isset($_GET['pipeline'])) {
     <!-- Latest compiled JavaScript -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/js/bootstrap.bundle.min.js"></script>
 
-    <script src='https://kit.fontawesome.com/a076d05399.js' crossorigin='anonymous'></script>
+    
 
     <meta charset="UTF-8">
 

@@ -17,28 +17,64 @@ include_once 'db.php';
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/js/bootstrap.bundle.min.js"></script>
+    <title>Home</title>
+    <style>
+        /* Style the tab */
+        .tab {
+            overflow: hidden;
+            border: 1px solid #fff;
+            background-color: #0c9ed9;
+            width: 40%;
+            margin-left: auto;
+            margin-right: auto;
+        }
 
-    <scrip; src='https://kit.fontawesome.com/a076d05399.js' crossorigin='anonymous'>
-        </script>
-        <title>Home</title>
-        <style>
-            table.center {
-                margin-left: auto;
-                margin-right: auto;
-            }
+        /* Style the buttons that are used to open the tab content */
+        .tab button {
+            background-color: inherit;
+            float: left;
+            border: none;
+            outline: none;
+            cursor: pointer;
+            padding: 14px 16px;
+            transition: 0.3s;
+        }
 
-            /* Chrome, Safari, Edge, Opera */
-            input::-webkit-outer-spin-button,
-            input::-webkit-inner-spin-button {
-                -webkit-appearance: none;
-                margin: 0;
-            }
+        /* Change background color of buttons on hover */
+        .tab button:hover {
+            background-color: #3d69b2;
+        }
 
-            /* Firefox */
-            input[type=number] {
-                -moz-appearance: textfield;
-            }
-        </style>
+        /* Create an active/current tablink class */
+        .tab button.active {
+            background-color: #00ffff;
+        }
+
+        /* Style the tab content */
+        .tabcontent {
+            display: none;
+            padding: 50px 50px;
+            /* border: 1px solid #0c9ed9; */
+            border-top: none;
+        }
+
+        table.center {
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        /* Chrome, Safari, Edge, Opera */
+        input::-webkit-outer-spin-button,
+        input::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+
+        /* Firefox */
+        input[type=number] {
+            -moz-appearance: textfield;
+        }
+    </style>
 </head>
 
 <body>
@@ -68,28 +104,37 @@ include_once 'db.php';
         if ($_SESSION["Level"] == "admin") {
     ?>
             <br>
+            <div class="tab">
+                <button class="tablinks" onclick="tab('csv')"> upload</button>
+                <button class="tablinks" onclick="tab('excel')"> upload excel</button>
+            </div>
             <form action="upload.php" method="post" enctype="multipart/form-data">
                 <div class="d-flex justify-content-center">
-                    <div class="col">
-                        <div class="input-group">
-                            <div class="custom-file">
-                                <input type="file" class="custom-file-input" id="customFileInput" accept=".csv" name="file">
-                                <label class="custom-file-label" for="customFileInput"></label>
-                            </div>
-                            <div class="input-group-append">
-                                <button type="submit" name="submitcsv" class="btn btn-primary"> Upload</button>
+                    <div id="csv" class="tabcontent">
+                        <h5>CSV</h5>
+                        <div class="col">
+                            <div class="input-group">
+                                <div class="custom-file">
+                                    <input type="file" class="custom-file-input" id="customFileInput" accept=".csv" name="file">
+                                    <label class="custom-file-label" for="customFileInput"></label>
+                                </div>
+                                <div class="input-group-append">
+                                    <button type="submit" name="submitcsv" class="btn btn-primary"> Upload</button>
+                                </div>
                             </div>
                         </div>
                     </div>
-
-                    <div class="col">
-                        <div class="input-group">
-                            <div class="custom-file">
-                                <input type="file" class="custom-file-input" id="customFileInputexcel" accept=".xls,.xlsx" name="excel_file">
-                                <label class="custom-file-label" for="customFileInputexcel"></label>
-                            </div>
-                            <div class="input-group-append">
-                                <button type="submit" name="submitexcel" class="btn btn-primary"> Upload</button>
+                    <div id="excel" class="tabcontent">
+                        <h5>EXCEL</h5>
+                        <div class="col">
+                            <div class="input-group">
+                                <div class="custom-file">
+                                    <input type="file" class="custom-file-input" id="customFileInputexcel" accept=".xls,.xlsx" name="excel_file">
+                                    <label class="custom-file-label" for="customFileInputexcel"></label>
+                                </div>
+                                <div class="input-group-append">
+                                    <button type="submit" name="submitexcel" class="btn btn-primary"> Upload</button>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -119,12 +164,6 @@ include_once 'db.php';
                 </form>
             </div>
 
-            <script>
-                $(".custom-file-input").on("change", function() {
-                    var fileName = $(this).val().split("\\").pop();
-                    $(this).siblings(".custom-file-label").addClass("selected").html(fileName);
-                });
-            </script>
         <?php
             $sqldbs = "SELECT * FROM `data` ORDER BY `date` DESC, `id` ASC  LIMIT $Page_Start , $Per_Page";
             $objQuery = mysqli_query($conn, "SELECT * FROM `data`");
@@ -311,187 +350,6 @@ include_once 'db.php';
             </div>
         </div>
     <?php }
-
-    if ($page == "additi") {
-        $Per_Page = 25;   // Per Page
-        $Page = $_GET["Page"];
-        if (!$_GET["Page"]) {
-            $Page = 1;
-        }
-        $Page_Start = (($Per_Page * $Page) - $Per_Page);
-
-        $query = "SELECT * FROM `addi` ORDER BY `time` DESC LIMIT $Page_Start , $Per_Page";
-        $objQuery = mysqli_query($conn, "SELECT * FROM `addi`");
-
-        $Num_Rows = mysqli_num_rows($objQuery);
-        if ($Num_Rows <= $Per_Page) {
-            $Num_Pages = 1;
-        } else if (($Num_Rows % $Per_Page) == 0) {
-            $Num_Pages = ($Num_Rows / $Per_Page);
-        } else {
-            $Num_Pages = ($Num_Rows / $Per_Page) + 1;
-            $Num_Pages = (int)$Num_Pages;
-        }
-
-        $First_Page = min(1, $Page);
-        $Prev_Page = $Page - 1;
-        $Next_Page = $Page + 1;
-        $Last_Page = max($Num_Pages, $Page);
-
-        function get_pagination_links($current_page, $total_pages, $url)
-        {
-            $links = "";
-            if ($total_pages >= 1 && $current_page <= $total_pages) {
-                $links .= "<a href=\"$url?page=additi&Page=1\">1</a>";
-                $i = max(2, $current_page - 3);
-                if ($i > 2)
-                    $links .= " ... ";
-                for ($i; $i <= min($current_page + 3, $total_pages); $i++) {
-                    if ($current_page == $i) {
-                        $links .=  "<a href=\"$url?page=additi&Page=$i\"> <b>$i</b> </a>";
-                    }
-                    // elseif ($i == $total_pages) {
-                    //     continue;
-                    // } 
-                    else {
-                        $links .=  "<a href=\"$url?page=additi&Page=$i\"> $i </a>";
-                    }
-                }
-            }
-            return $links;
-        }
-    ?>
-        <br>
-        <div style="text-align: center;">
-            <form action="in.php" method="post">
-                <table width="60%" class="center">
-                    <tr>
-                        <td><label for="shipper">Shipper </label></td>
-                        <td><label for="product">Prodect </label></td>
-                        <td><label for="received">Received </label></td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <select name="shipper" id="shipper" required>
-                                <option value="">--SELECT--</option>
-                                <?php
-                                $sql = "SELECT * FROM `company`";
-                                $querycom = mysqli_query($conn, $sql);
-                                while ($row = $querycom->fetch_array()) {
-                                ?>
-                                    <option value="<?php echo $row['drawercompany'] ?>"><?php echo $row['company'] ?></option>
-                                <?php
-                                }
-                                ?>
-                            </select>
-                        </td>
-                        <td>
-                            <select name="product" id="product" required>
-                                <option value="">--------------------SELECT PRODUCT--------------------</option>
-                            </select>
-                        </td>
-                        <td>
-                            <input type="number" name="received" placeholder="Received" required>
-                        </td>
-                    </tr>
-                </table>
-                <div style="margin-top: 10px;"></div>
-                <input type="submit" name="additi" value="เพิ่ม">
-            </form>
-            <br>
-            <div style="text-align:center;">
-                <div class="row ">
-                    <div class="col-4"></div>
-                    <div class="col-4">
-                        <?php
-
-                        if ($Prev_Page) {
-                            echo " <a href='$_SERVER[SCRIPT_NAME]?page=additi&Page=$First_Page'><< First</a> ";
-                        }
-
-                        if ($Prev_Page) {
-                            echo " <a href='$_SERVER[SCRIPT_NAME]?page=additi&Page=$Prev_Page'><< Back</a> ";
-                        }
-
-                        echo get_pagination_links($Page, $Num_Pages, $_SERVER['SCRIPT_NAME']);
-
-                        if ($Page != $Num_Pages) {
-                            echo " <a href ='$_SERVER[SCRIPT_NAME]?page=additi&Page=$Next_Page'>Next>></a> ";
-                        }
-
-                        if ($Page != $Num_Pages) {
-                            echo " <a href ='$_SERVER[SCRIPT_NAME]?page=additi&Page=$Last_Page'>Last>></a> ";
-                        }
-
-                        ?>
-                    </div>
-                </div>
-            </div>
-            <br>
-            <table border='1' width='80%' class="center">
-                <tr>
-                    <th class="text-center" width="1%">ลบ</th>
-                    <th class="text-center" width="1%">แก้ไข</th>
-                    <th class="text-center" width="1%">Shipper</th>
-                    <th class="text-center" width="1%">Product</th>
-                    <th class="text-center" width="1%">Received</th>
-                    <th class="text-center" width="1%">Time</th>
-                </tr>
-                <?php
-                $result = mysqli_query($conn, $query);
-                while ($rowaddi = $result->fetch_array()) {
-                    $shipper = $rowaddi['shipper'];
-                    $querycom = "SELECT * FROM `company` WHERE `drawercompany` = '$shipper'";
-                    $resultcom = mysqli_query($conn, $querycom);
-                    while ($rowcom = $resultcom->fetch_array()) {
-                ?>
-                        <tr>
-                            <td class="text-center" width="1%"><a href='del.php?addi=<?php echo $rowaddi['id'] ?>' onclick="return confirm('ต้องการลบหรือไม่')"><img src='icon/delete.gif' /></a></td>
-                            <td class="text-center" width="1%"><a href='edit.php?addi=<?php echo $rowaddi['id'] ?>'><img src='icon/edit.gif' /></a></td>
-                            <td class="text-center" width="1%"><?php echo $rowcom['company']; ?></td>
-                            <td class="text-center" width="3%"><?php echo $rowaddi['basename'] . " - " . $rowaddi['drawername'] . " - " . $rowaddi['ch']; ?></td>
-                            <td class="text-center" width="1%"><?php echo $rowaddi['received']; ?></td>
-                            <td class="text-center" width="1%"><?php echo $rowaddi['time']; ?></td>
-
-                        </tr>
-                <?php
-                    }
-                }
-                ?>
-            </table>
-            <br>
-        </div>
-        <div style="text-align:center;">
-            <div class="row ">
-                <div class="col-4"></div>
-                <div class="col-4">
-                    <?php
-
-                    if ($Prev_Page) {
-                        echo " <a href='$_SERVER[SCRIPT_NAME]?page=additi&Page=$First_Page'><< First</a> ";
-                    }
-
-                    if ($Prev_Page) {
-                        echo " <a href='$_SERVER[SCRIPT_NAME]?page=additi&Page=$Prev_Page'><< Back</a> ";
-                    }
-
-                    echo get_pagination_links($Page, $Num_Pages, $_SERVER['SCRIPT_NAME']);
-
-                    if ($Page != $Num_Pages) {
-                        echo " <a href ='$_SERVER[SCRIPT_NAME]?page=additi&Page=$Next_Page'>Next>></a> ";
-                    }
-
-                    if ($Page != $Num_Pages) {
-                        echo " <a href ='$_SERVER[SCRIPT_NAME]?page=additi&Page=$Last_Page'>Last>></a> ";
-                    }
-
-                    ?>
-                </div>
-            </div>
-        </div>
-        <br>
-    <?php
-    }
 
     if ($page == "trackmode") {
         $Per_Page = 25;   // Per Page
@@ -860,6 +718,26 @@ include_once 'db.php';
     }
     ?>
 
+    <script>
+        $(".custom-file-input").on("change", function() {
+            var fileName = $(this).val().split("\\").pop();
+            $(this).siblings(".custom-file-label").addClass("selected").html(fileName);
+        });
+
+        function tab(type) {
+            var i, tabcontent, tablinks;
+            tabcontent = document.getElementsByClassName("tabcontent");
+            for (i = 0; i < tabcontent.length; i++) {
+                tabcontent[i].style.display = "none";
+            }
+            tablinks = document.getElementsByClassName("tablinks");
+            for (i = 0; i < tablinks.length; i++) {
+                tablinks[i].className = tablinks[i].className.replace(" active", "");
+            }
+            document.getElementById(type).style.display = "block";
+            evt.currentTarget.className += " active";
+        }
+    </script>
 
     <script src="assets/jquery.min.js"></script>
     <script src="assets/script.js"></script>

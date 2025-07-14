@@ -1,7 +1,7 @@
 $(function () {
     var shipper = $('#shipper');
     var product = $('#product');
-    
+
     shipper.on('change', function () {
         var shippercom = $(this).val();
 
