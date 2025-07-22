@@ -66,22 +66,22 @@ include_once 'db.php';
             <input type="month" name="month-year" style="width: 140px;" required>
 
             <h6 for="remaining">remaining </h6>
-            <input type="number" name="remaining" placeholder="Remaining" style="width: 140px;" required>
+            <input type="number" step="0.001" name="remaining" placeholder="Remaining" style="width: 140px;" required>
             
             <h6 for="stock">Stock in day tank</h6>
-            <input type="number" name="stock" placeholder="Stock in day tank" style="width: 140px;" required>
+            <input type="number" step="0.001" name="stock" placeholder="Stock in day tank" style="width: 140px;" required>
             
             <h6 for="deadstock">dead stock </h6>
-            <input type="number" name="deadstock" placeholder="Dead stock" style="width: 140px;" required>
+            <input type="number" step="0.001" name="deadstock" placeholder="Dead stock" style="width: 140px;" required>
             
             <h6 for="line">Line content</h6>
-            <input type="number" name="line" placeholder="Line content" style="width: 140px;" required>
+            <input type="number" step="0.001" name="line" placeholder="Line content" style="width: 140px;" required>
             
             <h6 for="total">Total stock</h6>
-            <input type="number" name="total" placeholder="Total stock" style="width: 140px;" required>
+            <input type="number" step="0.001" name="total" placeholder="Total stock" style="width: 140px;" required>
             
-            <h6 for="remark">Remark</h6>
-            <input type="text" name="remark" placeholder="Remark" style="width: 140px;" required>
+            <h6 for="available">Available stock</h6>
+            <input type="text" name="available" placeholder="Available stock" style="width: 140px;" required>
 
             <div style="margin-top: 10px;"></div>
             <input type="submit" name="month" value="เพิ่ม">

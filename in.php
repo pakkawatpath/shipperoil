@@ -45,9 +45,38 @@ if (isset($_POST['daily'])) {
     $shipper = $_POST['shipper'];
     $date = $_POST['date'];
     $received = $_POST['received'];
+    $delivery = $_POST['delivery'];
+    $cal = $_POST['cal'];
+    $remark = $_POST['remark'];
 
-    mysqli_query($conn, "INSERT INTO `addi`(`shipper`, `date`, `received`) VALUES ('$shipper', '$date', '$received')");
-    
+    preg_match_all('/\d+/', $cal, $matches);
+    $resultcal = $matches[0][0] * $matches[0][1];
+
+    $datecreate = date_create($date);
+    $m = date_format($datecreate, "Y-m");
+
+    $sqlre = "SELECT * FROM `addi` where `date` LIKE '$m%' ORDER BY `id` DESC LIMIT 1";
+
+    $resultre = mysqli_query($conn, $sqlre);
+    $rowre = $resultre->fetch_array();
+
+    $sqlmonth = "SELECT * FROM `addimonth` WHERE `monthyear` = '$m'";
+    $resultmonth = mysqli_query($conn, $sqlmonth);
+    $rowmonth = $resultmonth->fetch_array();
+
+    $deadstock = $rowmonth['deadstock'];
+    $line = $rowmonth['line'];
+
+    if (empty($rowre)) {
+        $unopened = $rowmonth['remaining'] + $received - ($resultcal);
+        $stock = $rowmonth['stock'] - $delivery + ($resultcal);
+    } else {
+        $unopened = $rowre['unopened'] + $received - ($resultcal);
+        $stock = $rowre['stock'] - $delivery + ($resultcal);
+    }
+
+    mysqli_query($conn, "INSERT INTO `addi`(`shipper`, `date`, `received`, `cal`, `unopened`, `stock`, `delivery`, `deadstock`, `line`, `remark`) VALUES ('$shipper', '$date', '$received', '$cal', '$unopened', '$stock', '$delivery', '$deadstock', '$line', '$remark')");
+
     echo "<script>";
     echo "window.location.href='additive.php?date=1'";
     echo "</script>";
@@ -61,10 +90,10 @@ if (isset($_POST['month'])) {
     $deadstock = $_POST['deadstock'];
     $line = $_POST['line'];
     $total = $_POST['total'];
-    $remark = $_POST['remark'];
+    $available = $_POST['available'];
 
-    mysqli_query($conn, "INSERT INTO `addimonth`( `shipper`, `monthyear`, `remaining`, `stock`, `deadstock`, `line`, `total`, `remark`) VALUES ('$shipper','$month','$remaining','$stock','$deadstock','$line','$total','$remark')");
-    
+    mysqli_query($conn, "INSERT INTO `addimonth`( `shipper`, `monthyear`, `remaining`, `stock`, `deadstock`, `line`, `total`, `available`) VALUES ('$shipper','$month','$remaining','$stock','$deadstock','$line','$total','$available')");
+
     echo "<script>";
     echo "window.location.href='additive.php?month-year=1'";
     echo "</script>";

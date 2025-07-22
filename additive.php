@@ -73,6 +73,11 @@ include_once 'headadmin.php';
         input[type=number] {
             -moz-appearance: textfield;
         }
+
+        body {
+            max-width: 100%;
+            overflow-x: hidden;
+        }
     </style>
 </head>
 
@@ -84,8 +89,8 @@ include_once 'headadmin.php';
     if (isset($_GET["date"])) {
 
         $Per_Page = 25;   // Per Page
-        $Page = $_GET["Page"];
-        if (!$_GET["Page"]) {
+        $Page = $_GET["date"];
+        if (!$_GET["date"]) {
             $Page = 1;
         }
         $Page_Start = (($Per_Page * $Page) - $Per_Page);
@@ -132,32 +137,10 @@ include_once 'headadmin.php';
         }
     ?>
         <div style="text-align:center;">
-            <form action="in.php" method="post">
-                <div style="margin-top: 10px;"></div>
-                <h6 for="shipper">Shipper </h6>
-                <select name="shipper" id="shipper" required>
-                    <option value="">--SELECT--</option>
-                    <?php
-                    $sql = "SELECT * FROM `company`";
-                    $querycom = mysqli_query($conn, $sql);
-                    while ($row = $querycom->fetch_array()) {
-                    ?>
-                        <option value="<?php echo $row['drawercompany'] ?>"><?php echo $row['company'] ?></option>
-                    <?php
-                    }
-                    ?>
-                </select>
-                <div style="margin-top: 10px;"></div>
-                <h6 for="date">Date </h6>
-                <input type="date" name="date" required>
-                <div style="margin-top: 10px;"></div>
-                <h6 for="received">Received </h6>
-                <input type="number" name="received" placeholder="Received" required>
-                <div style="margin-top: 10px;"></div>
-                <input type="submit" class="btn btn-success" name="daily" value="เพิ่ม">
-            </form>
             <br>
-
+            <a href="addadditivedate.php" class="btn btn-success">เพิ่ม</a>
+            <br>
+            <br>
 
             <div class="row ">
                 <div class="col-4"></div>
@@ -187,13 +170,20 @@ include_once 'headadmin.php';
             </div>
         </div>
         <br>
-        <table border='1' width='80%' class="center">
+        <table border='1' width='100%' class="center">
             <tr>
                 <th class="text-center" width="1%">ลบ</th>
                 <th class="text-center" width="1%">แก้ไข</th>
                 <th class="text-center" width="1%">Shipper</th>
                 <th class="text-center" width="1%">Date</th>
-                <th class="text-center" width="1%">Received</th>
+                <th class="text-center" width="1%">Unopened packaging</th>
+                <th class="text-center" width="1%">Stock in day tank</th>
+                <th class="text-center" width="1%">Dead stock</th>
+                <th class="text-center" width="1%">Delivery</th>
+                <th class="text-center" width="1%">Line content</th>
+                <th class="text-center" width="1%">Total stock</th>
+                <th class="text-center" width="1%">Available stock</th>
+                <th class="text-center" width="1%">Remark</th>
             </tr>
             <?php
             $result = mysqli_query($conn, $query);
@@ -202,14 +192,21 @@ include_once 'headadmin.php';
                 $querycom = "SELECT * FROM `company` WHERE `drawercompany` = '$shipper'";
                 $resultcom = mysqli_query($conn, $querycom);
                 while ($rowcom = $resultcom->fetch_array()) {
+                    $total = $rowaddi['unopened'] + $rowaddi['stock'] + $rowaddi['line'];
             ?>
                     <tr>
                         <td class="text-center" width="1%"><a href='del.php?addi=<?php echo $rowaddi['id'] ?>' onclick="return confirm('ต้องการลบหรือไม่')"><img src='icon/delete.gif' /></a></td>
                         <td class="text-center" width="1%"><a href='edit.php?addi=<?php echo $rowaddi['id'] ?>'><img src='icon/edit.gif' /></a></td>
                         <td class="text-center" width="1%"><?php echo $rowcom['company']; ?></td>
                         <td class="text-center" width="3%"><?php echo $rowaddi['date']; ?></td>
-                        <td class="text-center" width="1%"><?php echo $rowaddi['received']; ?></td>
-
+                        <td class="text-center" width="1%"><?php echo $rowaddi['unopened'] ?></td>
+                        <td class="text-center" width="1%"><?php echo $rowaddi['stock'] ?></td>
+                        <td class="text-center" width="1%"><?php echo $rowaddi['deadstock'] ?></td>
+                        <td class="text-center" width="1%"><?php echo $rowaddi['delivery'] ?></td>
+                        <td class="text-center" width="1%"><?php echo $rowaddi['line'] ?></td>
+                        <td class="text-center" width="1%"><?php echo $total?></td>
+                        <td class="text-center" width="1%"><?php echo $total - $rowaddi['deadstock'] - $rowaddi['line'] ?></td>
+                        <td class="text-center"><?php echo $rowaddi['remark'] ?></td>
                     </tr>
             <?php
                 }
@@ -249,8 +246,8 @@ include_once 'headadmin.php';
     <?php
     } else if (isset($_GET['month-year'])) {
         $Per_Page = 25; // Per Page
-        $Page = $_GET["Page"];
-        if (!$_GET["Page"]) {
+        $Page = $_GET["month-year"];
+        if (!$_GET["month-year"]) {
             $Page = 1;
         }
         $Page_Start = (($Per_Page * $Page) - $Per_Page);
@@ -296,14 +293,14 @@ include_once 'headadmin.php';
             return $links;
         }
     ?>
-        
-        
+
+
         <div style="text-align:center;">
-            
+
             <br>
 
             <a href="addadditive.php" class="btn btn-success">เพิ่ม</a>
-            
+
             <br>
             <br>
 
@@ -346,7 +343,7 @@ include_once 'headadmin.php';
                 <th class="text-center" width="1%">Dead stock</th>
                 <th class="text-center" width="1%">Line content</th>
                 <th class="text-center" width="1%">Total stock</th>
-                <th class="text-center" width="1%">Remark</th>
+                <th class="text-center" width="1%">Available stock</th>
             </tr>
             <?php
             $result = mysqli_query($conn, $query);
@@ -371,7 +368,7 @@ include_once 'headadmin.php';
                         <td class="text-center" width="1%"><?php echo $rowaddi['deadstock']; ?></td>
                         <td class="text-center" width="1%"><?php echo $rowaddi['line']; ?></td>
                         <td class="text-center" width="1%"><?php echo $rowaddi['total']; ?></td>
-                        <td class="text-center" width="1%"><?php echo $rowaddi['remark']; ?></td>
+                        <td class="text-center" width="1%"><?php echo $rowaddi['available']; ?></td>
 
                     </tr>
             <?php
