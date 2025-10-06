@@ -35,7 +35,9 @@ if (isset($_POST['base'])) {
     $base = $_POST['basename'];
     $ch = $_POST['ch'];
     $drawername = $_POST['drawername'];
-    mysqli_query($conn, "INSERT INTO `basename`(`shipper`, `basename`, `ch`, `drawername`) VALUES ('$shipper', '$base','$ch','$drawername')");
+    $productname = $_POST['productname'];
+    $basecode = $_POST['basecode'];
+    mysqli_query($conn, "INSERT INTO `basename`(`shipper`, `productname`, `basecode`, `basename`, `ch`, `drawername`) VALUES ('$shipper', '$productname', '$basecode', '$base','$ch','$drawername')");
     echo "<script>";
     echo "window.location.href='page.php?page=oil'";
     echo "</script>";

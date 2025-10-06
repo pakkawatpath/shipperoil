@@ -63,10 +63,11 @@ if (isset($_POST['submitcsv'])) {
         // Close opened CSV file
         fclose($csvFile);
     }
+    header("Location: body.php?page=homepage&Page=1");
 }
 
 if (isset($_POST['submitexcel'])) {
-    
+
     $file = $_FILES['excel_file']['tmp_name'];
 
     // 2. โหลด Excel
@@ -91,14 +92,14 @@ if (isset($_POST['submitexcel'])) {
         if (!empty($row[2])) {
             $productname = $row[2];
         }
-        
+
         $loadnumber = trim($row[3]);
         $tripnumber = trim($row[5]);
         $dmy = trim($row[6]);
         $drivercode = trim($row[8]);
         $tankercode = trim($row[10]);
         $unit = trim($row[12]);
-        $scheduleqty = trim($row[13]); 
+        $scheduleqty = trim($row[13]);
         $loadedobs = trim($row[14]);
         $loadedstd = trim($row[18]);
         $loaded = trim($row[21]);
@@ -107,7 +108,7 @@ if (isset($_POST['submitexcel'])) {
         if (empty($loadnumber) && empty($tripnumber) && empty($dmy) && empty($drivercode) && empty($tankercode) && empty($unit)) {
             continue;
         }
-    
+
         $loadnumber = $conn->real_escape_string($row[3]);
         $tripnumber = $conn->real_escape_string($row[5]);
         $dmy = $conn->real_escape_string($row[6]);
@@ -121,9 +122,32 @@ if (isset($_POST['submitexcel'])) {
         $injected = $conn->real_escape_string($row[22]);
 
         $sql = "INSERT INTO `drawerproduct`(`drawercodeandname`, `productname`, `loadnumber`, `tripnumber`, `dmy`, `drivercode`, `tankercode`, `unit`, `scheduleqty`, `loadedobs`, `loadedstd`, `loaded`, `injected`) VALUES ('$drawer', '$productname','$loadnumber','$tripnumber','$dmy','$drivercode','$tankercode','$unit','$scheduleqty','$loadedobs','$loadedstd','$loaded','$injected')";
-        
+
         $conn->query($sql);
     }
+    header("Location: body.php?page=homepage&Page=1");
 }
 
-header("Location: body.php?page=homepage&Page=1");
+if (isset($_POST['submitproduct'])) {
+    $file = $_FILES['product_file']['tmp_name'];
+
+    $spreadsheet = IOFactory::load($file);
+    $sheet = $spreadsheet->getActiveSheet();
+    $rows = $sheet->toArray();
+
+    foreach ($rows as $index => $row) {
+        $productname = trim($row[4]);
+        $productcode = trim($row[15]);
+        $basecode = trim($row[16]);
+        $persen = trim($row[20]);
+        $upperlmtlowerlmt = trim($row[22]);
+        $loadedobs = trim($row[24]);
+        $loadedstd = trim($row[27]);
+        $loaded = trim($row[28]);
+        $inj = trim($row[30]);
+
+        if ($productname == 'PRODUCT SUMMARY:') {
+            echo $productname . $productcode . " " . $basecode . " " . $persen . " " . $upperlmtlowerlmt . " " . $loadedobs . " " . $loadedstd . " " . $loaded . " " . $inj . "<br>";   
+        }    
+    }
+}

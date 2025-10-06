@@ -74,7 +74,7 @@ include_once 'db.php';
         input[type=number] {
             -moz-appearance: textfield;
         }
-        
+
         body {
             max-width: 100%;
             overflow-x: hidden;

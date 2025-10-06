@@ -95,7 +95,7 @@ include_once 'headadmin.php';
         }
         $Page_Start = (($Per_Page * $Page) - $Per_Page);
 
-        $query = "SELECT * FROM `addi` ORDER BY `date` DESC LIMIT $Page_Start , $Per_Page";
+        $query = "SELECT * FROM `addi` ORDER BY `date` ASC LIMIT $Page_Start , $Per_Page";
         $objQuery = mysqli_query($conn, "SELECT * FROM `addi`");
 
         $Num_Rows = mysqli_num_rows($objQuery);
@@ -117,19 +117,19 @@ include_once 'headadmin.php';
         {
             $links = "";
             if ($total_pages >= 1 && $current_page <= $total_pages) {
-                $links .= "<a href=\"$url?page=additi&Page=1\">1</a>";
+                $links .= "<a href=\"$url?date=1\">1</a>";
                 $i = max(2, $current_page - 3);
                 if ($i > 2)
                     $links .= " ... ";
                 for ($i; $i <= min($current_page + 3, $total_pages); $i++) {
                     if ($current_page == $i) {
-                        $links .=  "<a href=\"$url?page=additi&Page=$i\"> <b>$i</b> </a>";
+                        $links .=  "<a href=\"$url?date=$i\"> <b>$i</b> </a>";
                     }
                     // elseif ($i == $total_pages) {
                     //     continue;
                     // } 
                     else {
-                        $links .=  "<a href=\"$url?page=additi&Page=$i\"> $i </a>";
+                        $links .=  "<a href=\"$url?date=$i\"> $i </a>";
                     }
                 }
             }
@@ -148,21 +148,21 @@ include_once 'headadmin.php';
                     <?php
 
                     if ($Prev_Page) {
-                        echo " <a href='$_SERVER[SCRIPT_NAME]?page=additi&Page=$First_Page'><< First</a> ";
+                        echo " <a href='$_SERVER[SCRIPT_NAME]?date=$First_Page'><< First</a> ";
                     }
 
                     if ($Prev_Page) {
-                        echo " <a href='$_SERVER[SCRIPT_NAME]?page=additi&Page=$Prev_Page'><< Back</a> ";
+                        echo " <a href='$_SERVER[SCRIPT_NAME]?date=$Prev_Page'><< Back</a> ";
                     }
 
                     echo get_pagination_links($Page, $Num_Pages, $_SERVER['SCRIPT_NAME']);
 
                     if ($Page != $Num_Pages) {
-                        echo " <a href ='$_SERVER[SCRIPT_NAME]?page=additi&Page=$Next_Page'>Next>></a> ";
+                        echo " <a href ='$_SERVER[SCRIPT_NAME]?date=$Next_Page'>Next>></a> ";
                     }
 
                     if ($Page != $Num_Pages) {
-                        echo " <a href ='$_SERVER[SCRIPT_NAME]?page=additi&Page=$Last_Page'>Last>></a> ";
+                        echo " <a href ='$_SERVER[SCRIPT_NAME]?date=$Last_Page'>Last>></a> ";
                     }
 
                     ?>
@@ -176,6 +176,7 @@ include_once 'headadmin.php';
                 <th class="text-center" width="1%">แก้ไข</th>
                 <th class="text-center" width="1%">Shipper</th>
                 <th class="text-center" width="1%">Date</th>
+                <th class="text-center" width="1%">received</th>
                 <th class="text-center" width="1%">Unopened packaging</th>
                 <th class="text-center" width="1%">Stock in day tank</th>
                 <th class="text-center" width="1%">Dead stock</th>
@@ -199,12 +200,13 @@ include_once 'headadmin.php';
                         <td class="text-center" width="1%"><a href='edit.php?addi=<?php echo $rowaddi['id'] ?>'><img src='icon/edit.gif' /></a></td>
                         <td class="text-center" width="1%"><?php echo $rowcom['company']; ?></td>
                         <td class="text-center" width="3%"><?php echo $rowaddi['date']; ?></td>
+                        <td class="text-center" width="1%"><?php echo $rowaddi['received']; ?></td>
                         <td class="text-center" width="1%"><?php echo $rowaddi['unopened'] ?></td>
                         <td class="text-center" width="1%"><?php echo $rowaddi['stock'] ?></td>
                         <td class="text-center" width="1%"><?php echo $rowaddi['deadstock'] ?></td>
                         <td class="text-center" width="1%"><?php echo $rowaddi['delivery'] ?></td>
                         <td class="text-center" width="1%"><?php echo $rowaddi['line'] ?></td>
-                        <td class="text-center" width="1%"><?php echo $total?></td>
+                        <td class="text-center" width="1%"><?php echo $total ?></td>
                         <td class="text-center" width="1%"><?php echo $total - $rowaddi['deadstock'] - $rowaddi['line'] ?></td>
                         <td class="text-center"><?php echo $rowaddi['remark'] ?></td>
                     </tr>
@@ -222,21 +224,21 @@ include_once 'headadmin.php';
                     <?php
 
                     if ($Prev_Page) {
-                        echo " <a href='$_SERVER[SCRIPT_NAME]?page=additi&Page=$First_Page'><< First</a> ";
+                        echo " <a href='$_SERVER[SCRIPT_NAME]?date=$First_Page'><< First</a> ";
                     }
 
                     if ($Prev_Page) {
-                        echo " <a href='$_SERVER[SCRIPT_NAME]?page=additi&Page=$Prev_Page'><< Back</a> ";
+                        echo " <a href='$_SERVER[SCRIPT_NAME]?date=$Prev_Page'><< Back</a> ";
                     }
 
                     echo get_pagination_links($Page, $Num_Pages, $_SERVER['SCRIPT_NAME']);
 
                     if ($Page != $Num_Pages) {
-                        echo " <a href ='$_SERVER[SCRIPT_NAME]?page=additi&Page=$Next_Page'>Next>></a> ";
+                        echo " <a href ='$_SERVER[SCRIPT_NAME]?date=$Next_Page'>Next>></a> ";
                     }
 
                     if ($Page != $Num_Pages) {
-                        echo " <a href ='$_SERVER[SCRIPT_NAME]?page=additi&Page=$Last_Page'>Last>></a> ";
+                        echo " <a href ='$_SERVER[SCRIPT_NAME]?date=$Last_Page'>Last>></a> ";
                     }
 
                     ?>
@@ -274,19 +276,19 @@ include_once 'headadmin.php';
         {
             $links = "";
             if ($total_pages >= 1 && $current_page <= $total_pages) {
-                $links .= "<a href=\" $url?page=additi&Page=1\">1</a>";
+                $links .= "<a href=\" $url?month-year=1\">1</a>";
                 $i = max(2, $current_page - 3);
                 if ($i > 2)
                     $links .= " ... ";
                 for ($i; $i <= min($current_page + 3, $total_pages); $i++) {
                     if ($current_page == $i) {
-                        $links .= "<a href=\" $url?page=additi&Page=$i\"> <b>$i</b> </a>";
+                        $links .= "<a href=\" $url?month-year=$i\"> <b>$i</b> </a>";
                     }
                     // elseif ($i == $total_pages) {
                     // continue;
                     // }
                     else {
-                        $links .= "<a href=\"$url?page=additi&Page=$i\"> $i </a>";
+                        $links .= "<a href=\"$url?month-year=$i\"> $i </a>";
                     }
                 }
             }
@@ -310,21 +312,21 @@ include_once 'headadmin.php';
                     <?php
 
                     if ($Prev_Page) {
-                        echo " <a href='$_SERVER[SCRIPT_NAME]?page=additi&Page=$First_Page'><< First</a> ";
+                        echo " <a href='$_SERVER[SCRIPT_NAME]?month-year=$First_Page'><< First</a> ";
                     }
 
                     if ($Prev_Page) {
-                        echo " <a href='$_SERVER[SCRIPT_NAME]?page=additi&Page=$Prev_Page'><< Back</a> ";
+                        echo " <a href='$_SERVER[SCRIPT_NAME]?month-year=$Prev_Page'><< Back</a> ";
                     }
 
                     echo get_pagination_links($Page, $Num_Pages, $_SERVER['SCRIPT_NAME']);
 
                     if ($Page != $Num_Pages) {
-                        echo " <a href ='$_SERVER[SCRIPT_NAME]?page=additi&Page=$Next_Page'>Next>></a> ";
+                        echo " <a href ='$_SERVER[SCRIPT_NAME]?month-year=$Next_Page'>Next>></a> ";
                     }
 
                     if ($Page != $Num_Pages) {
-                        echo " <a href ='$_SERVER[SCRIPT_NAME]?page=additi&Page=$Last_Page'>Last>></a> ";
+                        echo " <a href ='$_SERVER[SCRIPT_NAME]?month-year=$Last_Page'>Last>></a> ";
                     }
 
                     ?>
@@ -385,21 +387,198 @@ include_once 'headadmin.php';
                     <?php
 
                     if ($Prev_Page) {
-                        echo " <a href='$_SERVER[SCRIPT_NAME]?page=additi&Page=$First_Page'><< First</a> ";
+                        echo " <a href='$_SERVER[SCRIPT_NAME]?month-year=$First_Page'><< First</a> ";
                     }
 
                     if ($Prev_Page) {
-                        echo " <a href='$_SERVER[SCRIPT_NAME]?page=additi&Page=$Prev_Page'><< Back</a> ";
+                        echo " <a href='$_SERVER[SCRIPT_NAME]?month-year=$Prev_Page'><< Back</a> ";
                     }
 
                     echo get_pagination_links($Page, $Num_Pages, $_SERVER['SCRIPT_NAME']);
 
                     if ($Page != $Num_Pages) {
-                        echo " <a href ='$_SERVER[SCRIPT_NAME]?page=additi&Page=$Next_Page'>Next>></a> ";
+                        echo " <a href ='$_SERVER[SCRIPT_NAME]?month-year=$Next_Page'>Next>></a> ";
                     }
 
                     if ($Page != $Num_Pages) {
-                        echo " <a href ='$_SERVER[SCRIPT_NAME]?page=additi&Page=$Last_Page'>Last>></a> ";
+                        echo " <a href ='$_SERVER[SCRIPT_NAME]?month-year=$Last_Page'>Last>></a> ";
+                    }
+
+                    ?>
+                </div>
+            </div>
+        </div>
+    <?php
+    } else if (isset($_GET['product'])) {
+        $Per_Page = 25; // Per Page
+        $Page = $_GET["product"];
+        if (!$_GET["product"]) {
+            $Page = 1;
+        }
+        $Page_Start = (($Per_Page * $Page) - $Per_Page);
+
+        $query = "SELECT * FROM `addimonth` ORDER BY `id` DESC LIMIT $Page_Start , $Per_Page";
+        $objQuery = mysqli_query($conn, "SELECT * FROM `addimonth`");
+
+        $Num_Rows = mysqli_num_rows($objQuery);
+        if ($Num_Rows <= $Per_Page) {
+            $Num_Pages = 1;
+        } else if (($Num_Rows % $Per_Page) == 0) {
+            $Num_Pages = ($Num_Rows / $Per_Page);
+        } else {
+            $Num_Pages = ($Num_Rows / $Per_Page) + 1;
+            $Num_Pages = (int)$Num_Pages;
+        }
+
+        $First_Page = min(1, $Page);
+        $Prev_Page = $Page - 1;
+        $Next_Page = $Page + 1;
+        $Last_Page = max($Num_Pages, $Page);
+
+        function get_pagination_links($current_page, $total_pages, $url)
+        {
+            $links = "";
+            if ($total_pages >= 1 && $current_page <= $total_pages) {
+                $links .= "<a href=\" $url?product=1\">1</a>";
+                $i = max(2, $current_page - 3);
+                if ($i > 2)
+                    $links .= " ... ";
+                for ($i; $i <= min($current_page + 3, $total_pages); $i++) {
+                    if ($current_page == $i) {
+                        $links .= "<a href=\" $url?product=$i\"> <b>$i</b> </a>";
+                    }
+                    // elseif ($i == $total_pages) {
+                    // continue;
+                    // }
+                    else {
+                        $links .= "<a href=\"$url?product=$i\"> $i </a>";
+                    }
+                }
+            }
+            return $links;
+        }
+    ?>
+
+
+        <div style="text-align:center;">
+
+            <br>
+            <form action="upload.php" method="post" enctype="multipart/form-data">
+
+                <div class="col" style="margin-left: auto;margin-right: auto;width: 50%;">
+                    <div class="input-group">
+                        <div class="custom-file">
+                            <input type="file" class="custom-file-input" id="customFileInputexcel" accept=".xls,.xlsx" name="product_file">
+                            <label class="custom-file-label" for="customFileInputexcel"></label>
+                        </div>
+                        <div class="input-group-append">
+                            <button type="submit" name="submitproduct" class="btn btn-primary"> Upload</button>
+                        </div>
+                    </div>
+                </div>
+
+
+            </form>
+
+            <br>
+            <br>
+
+            <div class="row ">
+                <div class="col-4"></div>
+                <div class="col-4">
+                    <?php
+
+                    if ($Prev_Page) {
+                        echo " <a href='$_SERVER[SCRIPT_NAME]?product=$First_Page'><< First</a> ";
+                    }
+
+                    if ($Prev_Page) {
+                        echo " <a href='$_SERVER[SCRIPT_NAME]?product=$Prev_Page'><< Back</a> ";
+                    }
+
+                    echo get_pagination_links($Page, $Num_Pages, $_SERVER['SCRIPT_NAME']);
+
+                    if ($Page != $Num_Pages) {
+                        echo " <a href ='$_SERVER[SCRIPT_NAME]?product=$Next_Page'>Next>></a> ";
+                    }
+
+                    if ($Page != $Num_Pages) {
+                        echo " <a href ='$_SERVER[SCRIPT_NAME]?product=$Last_Page'>Last>></a> ";
+                    }
+
+                    ?>
+                </div>
+            </div>
+        </div>
+        <br>
+        <table border='1' width='80%' class="center">
+            <tr>
+                <th class="text-center" width="1%">ลบ</th>
+                <th class="text-center" width="1%">แก้ไข</th>
+                <th class="text-center" width="1%">Shipper</th>
+                <th class="text-center" width="1%">Month-Year</th>
+                <th class="text-center" width="1%">Remaining</th>
+                <th class="text-center" width="1%">Stock in day tank</th>
+                <th class="text-center" width="1%">Dead stock</th>
+                <th class="text-center" width="1%">Line content</th>
+                <th class="text-center" width="1%">Total stock</th>
+                <th class="text-center" width="1%">Available stock</th>
+            </tr>
+            <?php
+            $result = mysqli_query($conn, $query);
+            while ($rowaddi = $result->fetch_array()) {
+                $shipper = $rowaddi['shipper'];
+                $querycom = "SELECT * FROM `company` WHERE `drawercompany` = '$shipper'";
+                $resultcom = mysqli_query($conn, $querycom);
+                while ($rowcom = $resultcom->fetch_array()) {
+            ?>
+                    <tr>
+                        <td class="text-center" width="1%"><a href='del.php?addimonth=<?php echo $rowaddi['id'] ?>' onclick="return confirm('ต้องการลบหรือไม่')"><img src='icon/delete.gif' /></a></td>
+                        <td class="text-center" width="1%"><a href='edit.php?addimonth=<?php echo $rowaddi['id'] ?>'><img src='icon/edit.gif' /></a></td>
+                        <td class="text-center" width="1%"><?php echo $rowcom['company']; ?></td>
+                        <td class="text-center" width="1%">
+                            <?php
+                            $monthyear = date_create($rowaddi['monthyear']);
+                            echo date_format($monthyear, "M-Y");
+                            ?>
+                        </td>
+                        <td class="text-center" width="1%"><?php echo $rowaddi['remaining']; ?></td>
+                        <td class="text-center" width="1%"><?php echo $rowaddi['stock']; ?></td>
+                        <td class="text-center" width="1%"><?php echo $rowaddi['deadstock']; ?></td>
+                        <td class="text-center" width="1%"><?php echo $rowaddi['line']; ?></td>
+                        <td class="text-center" width="1%"><?php echo $rowaddi['total']; ?></td>
+                        <td class="text-center" width="1%"><?php echo $rowaddi['available']; ?></td>
+
+                    </tr>
+            <?php
+                }
+            }
+            ?>
+        </table>
+        <br>
+
+        <div style="text-align:center;">
+            <div class="row ">
+                <div class="col-4"></div>
+                <div class="col-4">
+                    <?php
+
+                    if ($Prev_Page) {
+                        echo " <a href='$_SERVER[SCRIPT_NAME]?product=$First_Page'><< First</a> ";
+                    }
+
+                    if ($Prev_Page) {
+                        echo " <a href='$_SERVER[SCRIPT_NAME]?product=$Prev_Page'><< Back</a> ";
+                    }
+
+                    echo get_pagination_links($Page, $Num_Pages, $_SERVER['SCRIPT_NAME']);
+
+                    if ($Page != $Num_Pages) {
+                        echo " <a href ='$_SERVER[SCRIPT_NAME]?product=$Next_Page'>Next>></a> ";
+                    }
+
+                    if ($Page != $Num_Pages) {
+                        echo " <a href ='$_SERVER[SCRIPT_NAME]?product=$Last_Page'>Last>></a> ";
                     }
 
                     ?>
@@ -410,6 +589,12 @@ include_once 'headadmin.php';
     }
     ?>
     <br>
+    <script>
+        $(".custom-file-input").on("change", function() {
+            var fileName = $(this).val().split("\\").pop();
+            $(this).siblings(".custom-file-label").addClass("selected").html(fileName);
+        });
+    </script>
 </body>
 
 </html>

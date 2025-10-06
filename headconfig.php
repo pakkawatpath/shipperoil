@@ -47,7 +47,7 @@ include_once "db.php";
                 <a href='page.php?page=user'><i class="fa fa-user" style="font-size: 80px;"></i><br>User</a>
             </div>
             <div class="col">
-                <a href='page.php?page=oil'><img src='icon/oil.png' width="82" height="82" /><br>Oil</a>
+                <a href='page.php?page=oil&number=1'><img src='icon/oil.png' width="82" height="82" /><br>Oil</a>
                 <!-- <br>
                 <br>
                 <a href='page.php?page=oil'>Basename</a> -->

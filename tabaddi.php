@@ -52,6 +52,7 @@ include_once 'db.php';
         <form action="additive.php" method="get">
             <button class="submit" name="date" value="1">Date</button>
             <button class="submit" name="month-year" value="1">Month-Year</button>
+            <button class="submit" name="product" value="1">Product</button>
         </form>
     </div>
 </body>
