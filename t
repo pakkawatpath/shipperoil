@@ -1,0 +1,1 @@
+Fatal error: Uncaught Error: Object of class DateTime could not be converted to string in C:\xampp\htdocs\shipperoil\monthlytruck.php:45 Stack trace: #0 C:\xampp\htdocs\shipperoil\monthlytruck.php(159): get_pagination_links(1, 2, '/shipperoil/mon...', Object(DateTime)) #1 {main} thrown in C:\xampp\htdocs\shipperoil\monthlytruck.php on line 45

@@ -84,7 +84,6 @@ include_once 'headadmin.php';
 <body>
     <br>
     <?php
-    include_once('tabaddi.php');
 
     if (isset($_GET["date"])) {
 
@@ -137,6 +136,10 @@ include_once 'headadmin.php';
         }
     ?>
         <div style="text-align:center;">
+            <h1>Additive</h1>
+            <?php
+            include_once('tabaddi.php');
+            ?>
             <br>
             <a href="addadditivedate.php" class="btn btn-success">เพิ่ม</a>
             <br>
@@ -298,7 +301,10 @@ include_once 'headadmin.php';
 
 
         <div style="text-align:center;">
-
+            <h1>Additive</h1>
+            <?php
+            include_once('tabaddi.php');
+            ?>
             <br>
 
             <a href="addadditive.php" class="btn btn-success">เพิ่ม</a>
@@ -461,8 +467,12 @@ include_once 'headadmin.php';
 
 
         <div style="text-align:center;">
-
+            <h1>Additive</h1>
+            <?php
+            include_once('tabaddi.php');
+            ?>
             <br>
+
             <form action="upload.php" method="post" enctype="multipart/form-data">
 
                 <div class="col" style="margin-left: auto;margin-right: auto;width: 50%;">

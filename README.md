@@ -5,7 +5,7 @@ A web-based system built for managing product data, inventory control, and confi
 ## 🚚 Features
 
 - Product listing, insertion, editing, and deletion
-- Confirmation and tracking system for oil shipping
+- Confirmation and trucking system for oil shipping
 - Admin and user role interfaces
 - File export/download capabilities
 - Modular PHP structure with reusable components

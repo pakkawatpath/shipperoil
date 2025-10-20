@@ -16,3 +16,6 @@ session_start();
 if (empty($_SESSION["UserID"])) {
     header("Location: index.php");
 }
+
+session_start();
+date_default_timezone_set("Asia/Bangkok");

@@ -1,7 +1,7 @@
 <?php
 include('db.php');
 $shipper = $_GET['shipper'];
-$sql = "SELECT * FROM `basename` WHERE `shipper` = '$shipper'";
+$sql = "SELECT DISTINCT `basename` FROM `basename` WHERE `shipper` = '$shipper'";
 $query = mysqli_query($conn, $sql);
 
 $json = array();

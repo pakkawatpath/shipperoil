@@ -32,23 +32,20 @@ if (isset($_POST['updateaddimonth'])) {
     echo "</script>";
 }
 
-if (isset($_POST['updatetrack'])) {
+if (isset($_POST['updatetruck'])) {
     $shipper = $_POST['shipper'];
     $product = $_POST['product'];
     $received = $_POST['received'];
     $number = $_POST['number'];
     $id = $_POST['id'];
+    $tank = $_POST['tank'];
 
-    $sql = "SELECT * FROM `basename` WHERE `id` = '$product'";
-    $result = mysqli_query($conn, $sql);
-    while ($row = $result->fetch_array()) {
-        $basename = $row['basename'];
-        $drawername = $row['drawername'];
-        $ch = $row['ch'];
-        mysqli_query($conn, "UPDATE `track` SET `shipper`='$shipper',`basename`='$basename',`drawername`='$drawername',`ch`='$ch',`received`='$received',`number`='$number' WHERE `id` = '$id'");
-    }
+    mysqli_query($conn, "UPDATE `track` SET `shipper`='$shipper',`basename`='$product',`received`='$received',`number`='$number', `tank`='$tank' WHERE `id` = '$id'");
+
+    $url = $_SESSION['url'];
+
     echo "<script>";
-    echo "window.location.href='body.php?page=trackmode&Page=1'";
+    echo "window.location.href='$url'";
     echo "</script>";
 }
 
@@ -56,17 +53,15 @@ if (isset($_POST['updatepipeline'])) {
     $shipper = $_POST['shipper'];
     $product = $_POST['product'];
     $received = $_POST['received'];
+    $tank = $_POST['tank'];
     $id = $_POST['id'];
 
-    $sql = "SELECT * FROM `basename` WHERE `id` = '$product'";
-    $result = mysqli_query($conn, $sql);
-    while ($row = $result->fetch_array()) {
-        $basename = $row['basename'];
-        $drawername = $row['drawername'];
-        $ch = $row['ch'];
-        mysqli_query($conn, "UPDATE `pipeline` SET `shipper`='$shipper',`basename`='$basename',`drawername`='$drawername',`ch`='$ch',`received`='$received' WHERE id = '$id'");
-    }
+    
+    mysqli_query($conn, "UPDATE `pipeline` SET `shipper`='$shipper',`basename`='$product', `received`='$received', `tank`='$tank' WHERE id = '$id'");
+    
+    $url = $_SESSION['url'];
+
     echo "<script>";
-    echo "window.location.href='body.php?page=pipelinemode&Page=1'";
+    echo "window.location.href='$url'";
     echo "</script>";
 }

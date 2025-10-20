@@ -3,10 +3,22 @@ include_once "db.php";
 
 if (isset($_GET['company'])) {
     $delete = $conn->real_escape_string($_GET['company']);
-    $sql = $conn->query("DELETE FROM `company` WHERE `company` = '$delete'");
+    $sql = $conn->query("DELETE FROM `company` WHERE `id` = '$delete'");
     if ($sql) {
         echo "<script>";
-        echo "window.location.href='page.php?page=company'";
+        echo "window.location.href='page.php?page=company&number=1'";
+        echo "</script>";
+    } else {
+        echo "ERROR";
+    }
+}
+
+if (isset($_GET['tank'])) {
+    $delete = $conn->real_escape_string($_GET['tank']);
+    $sql = $conn->query("DELETE FROM `tank_gas` WHERE `id` = '$delete'");
+    if ($sql) {
+        echo "<script>";
+        echo "window.location.href='page.php?page=tank&number=1'";
         echo "</script>";
     } else {
         echo "ERROR";
@@ -76,12 +88,13 @@ if (isset($_GET['addimonth'])) {
     }
 }
 
-if (isset($_GET['track'])) {
-    $delete = $conn->real_escape_string($_GET['track']);
+if (isset($_GET['truck'])) {
+    $delete = $conn->real_escape_string($_GET['truck']);
     $sql = $conn->query("DELETE FROM `track` WHERE `id` = '$delete'");
     if ($sql) {
+        $url = $_SESSION['url'];
         echo "<script>";
-        echo "window.location.href='body.php?page=trackmode&Page=1'";
+        echo "window.location.href='$url'";
         echo "</script>";
     } else {
         echo "ERROR";
@@ -92,8 +105,9 @@ if (isset($_GET['pipeline'])) {
     $delete = $conn->real_escape_string($_GET['pipeline']);
     $sql = $conn->query("DELETE FROM `pipeline` WHERE `id` = '$delete'");
     if ($sql) {
+        $url = $_SESSION['url'];
         echo "<script>";
-        echo "window.location.href='body.php?page=pipelinemode&Page=1'";
+        echo "window.location.href='$url'";
         echo "</script>";
     } else {
         echo "ERROR";

@@ -356,7 +356,7 @@ include_once 'db.php';
         </div>
     <?php }
 
-    if ($page == "trackmode") {
+    if ($page == "truckmode") {
         $Per_Page = 25;   // Per Page
         $Page = $_GET["Page"];
         if (!$_GET["Page"]) {
@@ -364,7 +364,7 @@ include_once 'db.php';
         }
         $Page_Start = (($Per_Page * $Page) - $Per_Page);
 
-        $query = "SELECT * FROM `track` ORDER BY `time` DESC LIMIT $Page_Start , $Per_Page";
+        $query = "SELECT * FROM `track` ORDER BY `datetime` DESC LIMIT $Page_Start , $Per_Page";
         $objQuery = mysqli_query($conn, "SELECT * FROM `track`");
 
         $Num_Rows = mysqli_num_rows($objQuery);
@@ -386,67 +386,36 @@ include_once 'db.php';
         {
             $links = "";
             if ($total_pages >= 1 && $current_page <= $total_pages) {
-                $links .= "<a href=\"$url?page=trackmode&Page=1\">1</a>";
+                $links .= "<a href=\"$url?page=truckmode&Page=1\">1</a>";
                 $i = max(2, $current_page - 3);
                 if ($i > 2)
                     $links .= " ... ";
                 for ($i; $i <= min($current_page + 3, $total_pages); $i++) {
                     if ($current_page == $i) {
-                        $links .=  "<a href=\"$url?page=trackmode&Page=$i\"> <b>$i</b> </a>";
+                        $links .=  "<a href=\"$url?page=truckmode&Page=$i\"> <b>$i</b> </a>";
                     }
                     // elseif ($i == $total_pages) {
                     //     continue;
                     // } 
                     else {
-                        $links .=  "<a href=\"$url?page=trackmode&Page=$i\"> $i </a>";
+                        $links .=  "<a href=\"$url?page=truckmode&Page=$i\"> $i </a>";
                     }
                 }
             }
             return $links;
         }
+
+        $_SESSION['url'] = $_SERVER['REQUEST_URI'];
     ?>
         <br>
         <div style="text-align: center;">
-            <form action="in.php" method="post">
-                <table width="80%" class="center">
-                    <tr>
-                        <td><label for="shipper">Shipper </label></td>
-                        <td><label for="product">Prodect </label></td>
-                        <td><label for="received">Received </label></td>
-                        <td><label for="numberreceived">เลขใบรับสินค้า</label></td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <select name="shipper" id="shipper" required>
-                                <option value="">--SELECT--</option>
-                                <?php
-                                $sql = "SELECT * FROM `company`";
-                                $querycom = mysqli_query($conn, $sql);
-                                while ($row = $querycom->fetch_array()) {
-                                ?>
-                                    <option value="<?php echo $row['drawercompany'] ?>"><?php echo $row['company'] ?></option>
-                                <?php
-                                }
-                                ?>
-                            </select>
-                        </td>
-                        <td>
-                            <select name="product" id="product" required>
-                                <option value="">--------------------SELECT PRODUCT--------------------</option>
-                            </select>
-                        </td>
-                        <td>
-                            <input type="number" name="received" placeholder="Received" required>
-                        </td>
-                        <td>
-                            <input type="text" name="numberreceived" placeholder="เลขใบรับสินค้า" required>
-                        </td>
-                    </tr>
-                </table>
-                <div style="margin-top: 10px;"></div>
-                <input type="submit" name="track" value="เพิ่ม">
-            </form>
+            <h1>Truck Mode</h1>
             <br>
+            <a href="addtruck.php" class="btn btn-success">เพิ่ม</a>
+            <div style="margin-top: 10px;"></div>
+            <a href="dailytruck.php" class="btn btn-primary">รายวัน</a>
+            <a href="monthlytruck.php" class="btn btn-warning">รายเดือน</a>
+            <br><br>
             <div style="text-align:center;">
                 <div class="row ">
                     <div class="col-4"></div>
@@ -454,21 +423,21 @@ include_once 'db.php';
                         <?php
 
                         if ($Prev_Page) {
-                            echo " <a href='$_SERVER[SCRIPT_NAME]?page=trackmode&Page=$First_Page'><< First</a> ";
+                            echo " <a href='$_SERVER[SCRIPT_NAME]?page=truckmode&Page=$First_Page'><< First</a> ";
                         }
 
                         if ($Prev_Page) {
-                            echo " <a href='$_SERVER[SCRIPT_NAME]?page=trackmode&Page=$Prev_Page'><< Back</a> ";
+                            echo " <a href='$_SERVER[SCRIPT_NAME]?page=truckmode&Page=$Prev_Page'><< Back</a> ";
                         }
 
                         echo get_pagination_links($Page, $Num_Pages, $_SERVER['SCRIPT_NAME']);
 
                         if ($Page != $Num_Pages) {
-                            echo " <a href ='$_SERVER[SCRIPT_NAME]?page=trackmode&Page=$Next_Page'>Next>></a> ";
+                            echo " <a href ='$_SERVER[SCRIPT_NAME]?page=truckmode&Page=$Next_Page'>Next>></a> ";
                         }
 
                         if ($Page != $Num_Pages) {
-                            echo " <a href ='$_SERVER[SCRIPT_NAME]?page=trackmode&Page=$Last_Page'>Last>></a> ";
+                            echo " <a href ='$_SERVER[SCRIPT_NAME]?page=truckmode&Page=$Last_Page'>Last>></a> ";
                         }
 
                         ?>
@@ -476,7 +445,7 @@ include_once 'db.php';
                 </div>
             </div>
             <br>
-            <table border='1' width='80%' class="center">
+            <table border='1' width='95%' class="center">
                 <tr>
                     <th class="text-center" width="1%">ลบ</th>
                     <th class="text-center" width="1%">แก้ไข</th>
@@ -484,24 +453,26 @@ include_once 'db.php';
                     <th class="text-center" width="1%">Product</th>
                     <th class="text-center" width="1%">Received</th>
                     <th class="text-center" width="1%">เลขใบรับสินค้า</th>
-                    <th class="text-center" width="1%">Time</th>
+                    <th class="text-center" width="1%">ถังจัดเก็บ</th>
+                    <th class="text-center" width="1%">วันที่บันทึก</th>
                 </tr>
                 <?php
                 $result = mysqli_query($conn, $query);
-                while ($rowtrack = $result->fetch_array()) {
-                    $shipper = $rowtrack['shipper'];
+                while ($rowtruck = $result->fetch_array()) {
+                    $shipper = $rowtruck['shipper'];
                     $querycom = "SELECT * FROM `company` WHERE `drawercompany` = '$shipper'";
                     $resultcom = mysqli_query($conn, $querycom);
                     while ($rowcom = $resultcom->fetch_array()) {
                 ?>
                         <tr>
-                            <td class="text-center" width="1%"><a href='del.php?track=<?php echo $rowtrack['id'] ?>' onclick="return confirm('ต้องการลบหรือไม่')"><img src='icon/delete.gif' /></a></td>
-                            <td class="text-center" width="1%"><a href='edit.php?track=<?php echo $rowtrack['id'] ?>'><img src='icon/edit.gif' /></a></td>
+                            <td class="text-center" width="1%"><a href='del.php?truck=<?php echo $rowtruck['id'] ?>' onclick="return confirm('ต้องการลบหรือไม่')"><img src='icon/delete.gif' /></a></td>
+                            <td class="text-center" width="1%"><a href='edit.php?truck=<?php echo $rowtruck['id'] ?>'><img src='icon/edit.gif' /></a></td>
                             <td class="text-center" width="1%"><?php echo $rowcom['company']; ?></td>
-                            <td class="text-center" width="3%"><?php echo $rowtrack['basename'] . " - " . $rowtrack['drawername'] . " - " . $rowtrack['ch']; ?></td>
-                            <td class="text-center" width="1%"><?php echo $rowtrack['received']; ?></td>
-                            <td class="text-center" width="1%"><?php echo $rowtrack['number']; ?></td>
-                            <td class="text-center" width="1%"><?php echo $rowtrack['time']; ?></td>
+                            <td class="text-center" width="1%"><?php echo $rowtruck['basename'] ?></td>
+                            <td class="text-center" width="1%"><?php echo $rowtruck['received']; ?></td>
+                            <td class="text-center" width="1%"><?php echo $rowtruck['number']; ?></td>
+                            <td class="text-center" width="1%"><?php echo $rowtruck['tank']; ?></td>
+                            <td class="text-center" width="1%"><?php echo $rowtruck['datetime']; ?></td>
                         </tr>
                 <?php
                     }
@@ -517,21 +488,21 @@ include_once 'db.php';
                     <?php
 
                     if ($Prev_Page) {
-                        echo " <a href='$_SERVER[SCRIPT_NAME]?page=trackmode&Page=$First_Page'><< First</a> ";
+                        echo " <a href='$_SERVER[SCRIPT_NAME]?page=truckmode&Page=$First_Page'><< First</a> ";
                     }
 
                     if ($Prev_Page) {
-                        echo " <a href='$_SERVER[SCRIPT_NAME]?page=trackmode&Page=$Prev_Page'><< Back</a> ";
+                        echo " <a href='$_SERVER[SCRIPT_NAME]?page=truckmode&Page=$Prev_Page'><< Back</a> ";
                     }
 
                     echo get_pagination_links($Page, $Num_Pages, $_SERVER['SCRIPT_NAME']);
 
                     if ($Page != $Num_Pages) {
-                        echo " <a href ='$_SERVER[SCRIPT_NAME]?page=trackmode&Page=$Next_Page'>Next>></a> ";
+                        echo " <a href ='$_SERVER[SCRIPT_NAME]?page=truckmode&Page=$Next_Page'>Next>></a> ";
                     }
 
                     if ($Page != $Num_Pages) {
-                        echo " <a href ='$_SERVER[SCRIPT_NAME]?page=trackmode&Page=$Last_Page'>Last>></a> ";
+                        echo " <a href ='$_SERVER[SCRIPT_NAME]?page=truckmode&Page=$Last_Page'>Last>></a> ";
                     }
 
                     ?>
@@ -550,7 +521,7 @@ include_once 'db.php';
         }
         $Page_Start = (($Per_Page * $Page) - $Per_Page);
 
-        $query = "SELECT * FROM `pipeline` ORDER BY `time` DESC LIMIT $Page_Start , $Per_Page";
+        $query = "SELECT * FROM `pipeline` ORDER BY `datetime` DESC LIMIT $Page_Start , $Per_Page";
         $objQuery = mysqli_query($conn, "SELECT * FROM `pipeline`");
 
         $Num_Rows = mysqli_num_rows($objQuery);
@@ -590,45 +561,18 @@ include_once 'db.php';
             }
             return $links;
         }
+        $_SESSION['url'] = $_SERVER['REQUEST_URI'];
     ?>
         <br>
         <div style="text-align: center;">
-            <form action="in.php" method="post">
-                <table width="60%" class="center">
-                    <tr>
-                        <td><label for="shipper">Shipper </label></td>
-                        <td><label for="product">Prodect </label></td>
-                        <td><label for="received">Received </label></td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <select name="shipper" id="shipper" required>
-                                <option value="">--SELECT--</option>
-                                <?php
-                                $sql = "SELECT * FROM `company`";
-                                $querycom = mysqli_query($conn, $sql);
-                                while ($row = $querycom->fetch_array()) {
-                                ?>
-                                    <option value="<?php echo $row['drawercompany'] ?>"><?php echo $row['company'] ?></option>
-                                <?php
-                                }
-                                ?>
-                            </select>
-                        </td>
-                        <td>
-                            <select name="product" id="product" required>
-                                <option value="">--------------------SELECT PRODUCT--------------------</option>
-                            </select>
-                        </td>
-                        <td>
-                            <input type="number" name="received" placeholder="Received" required>
-                        </td>
-                    </tr>
-                </table>
-                <div style="margin-top: 10px;"></div>
-                <input type="submit" name="pipeline" value="เพิ่ม">
-            </form>
+            <h1>Pipeline Mode</h1>
             <br>
+            <a href="addpipeline.php" class="btn btn-success">เพิ่ม</a>
+            <div style="margin-top: 10px;"></div>
+            <a href="dailypipeline.php" class="btn btn-primary">รายวัน</a>
+            <a href="monthlypipeline.php" class="btn btn-warning">รายเดือน</a>
+            <br><br>
+            <!-- <br><br> -->
             <div style="text-align:center;">
                 <div class="row ">
                     <div class="col-4"></div>
@@ -658,14 +602,15 @@ include_once 'db.php';
                 </div>
             </div>
             <br>
-            <table border='1' width='80%' class="center">
+            <table border='1' width='95%' class="center">
                 <tr>
                     <th class="text-center" width="1%">ลบ</th>
                     <th class="text-center" width="1%">แก้ไข</th>
                     <th class="text-center" width="1%">Shipper</th>
                     <th class="text-center" width="1%">Product</th>
                     <th class="text-center" width="1%">Received</th>
-                    <th class="text-center" width="1%">Time</th>
+                    <th class="text-center" width="1%">ถังจัดเก็บ</th>
+                    <th class="text-center" width="1%">วันที่บันทึก</th>
                 </tr>
                 <?php
                 $result = mysqli_query($conn, $query);
@@ -679,9 +624,10 @@ include_once 'db.php';
                             <td class="text-center" width="1%"><a href='del.php?pipeline=<?php echo $rowpipeline['id'] ?>' onclick="return confirm('ต้องการลบหรือไม่')"><img src='icon/delete.gif' /></a></td>
                             <td class="text-center" width="1%"><a href='edit.php?pipeline=<?php echo $rowpipeline['id'] ?>'><img src='icon/edit.gif' /></a></td>
                             <td class="text-center" width="1%"><?php echo $rowcom['company']; ?></td>
-                            <td class="text-center" width="3%"><?php echo $rowpipeline['basename'] . " - " . $rowpipeline['drawername'] . " - " . $rowpipeline['ch']; ?></td>
+                            <td class="text-center" width="1%"><?php echo $rowpipeline['basename']; ?></td>
                             <td class="text-center" width="1%"><?php echo $rowpipeline['received']; ?></td>
-                            <td class="text-center" width="1%"><?php echo $rowpipeline['time']; ?></td>
+                            <td class="text-center" width="1%"><?php echo $rowpipeline['tank']; ?></td>
+                            <td class="text-center" width="1%"><?php echo $rowpipeline['datetime']; ?></td>
                         </tr>
                 <?php
                     }

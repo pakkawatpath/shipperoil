@@ -7,11 +7,11 @@ $(function () {
 
         product.html('<option value="">--------------------SELECT PRODUCT--------------------</option>');
 
-        $.get('get_product.php?shipper=' + shippercom, function (data) {
+        $.get('./get_product.php?shipper=' + shippercom, function (data) {
             var result = JSON.parse(data);
             $.each(result, function (index, item) {
                 product.append(
-                    $('<option></option>').val(item.id).html(item.basename + ' - ' + item.drawername + ' - ' + item.ch)
+                    $('<option></option>').val(item.basename).html(item.basename)
                 );
             })
         })

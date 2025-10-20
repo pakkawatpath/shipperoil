@@ -58,6 +58,53 @@ $page = $_GET['page'];
     <?php
 
     if ($page == "user") {
+        $Per_Page = 25;   // Per Page
+        $Page = $_GET["number"];
+        if (!$_GET["number"]) {
+            $Page = 1;
+        }
+        $Page_Start = (($Per_Page * $Page) - $Per_Page);
+
+        $sqldbs = "SELECT * FROM `user` LIMIT $Page_Start , $Per_Page";
+        $objQuery = mysqli_query($conn, "SELECT * FROM `user`");
+
+        $Num_Rows = mysqli_num_rows($objQuery);
+        if ($Num_Rows <= $Per_Page) {
+            $Num_Pages = 1;
+        } else if (($Num_Rows % $Per_Page) == 0) {
+            $Num_Pages = ($Num_Rows / $Per_Page);
+        } else {
+            $Num_Pages = ($Num_Rows / $Per_Page) + 1;
+            $Num_Pages = (int)$Num_Pages;
+        }
+
+        $First_Page = min(1, $Page);
+        $Prev_Page = $Page - 1;
+        $Next_Page = $Page + 1;
+        $Last_Page = max($Num_Pages, $Page);
+
+        function get_pagination_links($current_page, $total_pages, $url)
+        {
+            $links = "";
+            if ($total_pages >= 1 && $current_page <= $total_pages) {
+                $links .= "<a href=\"$url?page=user&number=1\">1</a>";
+                $i = max(2, $current_page - 3);
+                if ($i > 2)
+                    $links .= " ... ";
+                for ($i; $i <= min($current_page + 3, $total_pages); $i++) {
+                    if ($current_page == $i) {
+                        $links .=  "<a href=\"$url?page=user&number=$i\"> <b>$i</b> </a>";
+                    }
+                    // elseif ($i == $total_pages) {
+                    //     continue;
+                    // } 
+                    else {
+                        $links .=  "<a href=\"$url?page=user&number=$i\"> $i </a>";
+                    }
+                }
+            }
+            return $links;
+        }
     ?>
         <br />
         <div class="d-flex justify-content-center">
@@ -99,7 +146,35 @@ $page = $_GET['page'];
             </div>
         </div>
         <br>
+        <div style="text-align:center;">
+            <div class="row ">
+                <div class="col-4"></div>
+                <div class="col-4">
+                    <?php
 
+                    if ($Prev_Page) {
+                        echo " <a href='$_SERVER[SCRIPT_NAME]?page=user&number=$First_Page'><< First</a> ";
+                    }
+
+                    if ($Prev_Page) {
+                        echo " <a href='$_SERVER[SCRIPT_NAME]?page=user&number=$Prev_Page'><< Back</a> ";
+                    }
+
+                    echo get_pagination_links($Page, $Num_Pages, $_SERVER['SCRIPT_NAME']);
+
+                    if ($Page != $Num_Pages) {
+                        echo " <a href ='$_SERVER[SCRIPT_NAME]?page=user&number=$Next_Page'>Next>></a> ";
+                    }
+
+                    if ($Page != $Num_Pages) {
+                        echo " <a href ='$_SERVER[SCRIPT_NAME]?page=user&number=$Last_Page'>Last>></a> ";
+                    }
+
+                    ?>
+                </div>
+            </div>
+        </div>
+        <br>
         <table border='1' width='80%' class="center">
 
             <thead>
@@ -116,7 +191,7 @@ $page = $_GET['page'];
             <tbody>
                 <div style="margin: 10px 2% -10px;text-align:center;"></div>
                 <?php
-                $sqldbs = "SELECT * FROM `user`";
+
                 $resultdbs = mysqli_query($conn, $sqldbs);
                 while ($rowdbs = $resultdbs->fetch_array()) :
                 ?>
@@ -140,7 +215,36 @@ $page = $_GET['page'];
 
             </tbody>
 
-        </table></br>
+        </table>
+        <br>
+        <div style="text-align:center;">
+            <div class="row ">
+                <div class="col-4"></div>
+                <div class="col-4">
+                    <?php
+
+                    if ($Prev_Page) {
+                        echo " <a href='$_SERVER[SCRIPT_NAME]?page=user&number=$First_Page'><< First</a> ";
+                    }
+
+                    if ($Prev_Page) {
+                        echo " <a href='$_SERVER[SCRIPT_NAME]?page=user&number=$Prev_Page'><< Back</a> ";
+                    }
+
+                    echo get_pagination_links($Page, $Num_Pages, $_SERVER['SCRIPT_NAME']);
+
+                    if ($Page != $Num_Pages) {
+                        echo " <a href ='$_SERVER[SCRIPT_NAME]?page=user&number=$Next_Page'>Next>></a> ";
+                    }
+
+                    if ($Page != $Num_Pages) {
+                        echo " <a href ='$_SERVER[SCRIPT_NAME]?page=user&number=$Last_Page'>Last>></a> ";
+                    }
+
+                    ?>
+                </div>
+            </div>
+        </div>
     <?php }
 
     if ($page == "oil") {
@@ -234,8 +338,6 @@ $page = $_GET['page'];
                     <!-- <th class="text-center" width="1%">แก้ไข</th> -->
                     <th class="text-center" width="1%">ลบ</th>
                     <th class="text-center" width="10%">Shipper</th>
-                    <th class="text-center" width="10%">Product Code</th>
-                    <th class="text-center" width="10%">Base Code</th>
                     <th class="text-center" width="10%">Basename</th>
                     <th class="text-center" width="10%">Drawer Name</th>
                     <th class="text-center" width="10%">Basename Customer</th>
@@ -254,8 +356,6 @@ $page = $_GET['page'];
                         <!-- <td class="text-center" width="1%"><a href='editpage.php?door=<?php echo $rowdbs['doorname'] ?>'><img src='icon/edit.gif' /></a></td> -->
                         <td class="text-center" width="1%"><a href='del.php?oil=<?php echo $rowdbs['basename'] ?>&id=<?php echo $rowdbs['id'] ?>' onclick="return confirm('ต้องการลบหรือไม่')"><img src='icon/delete.gif' /></a></td>
                         <td class="text-center" width="1%"><?php echo $rowdbs['shipper']; ?></td>
-                        <td class="text-center" width="1%"><?php echo $rowdbs['productname']; ?></td>
-                        <td class="text-center" width="1%"><?php echo $rowdbs['basecode']; ?></td>
                         <td class="text-center" width="1%"><?php echo $rowdbs['basename']; ?></td>
                         <td class="text-center" width="1%"><?php echo $rowdbs['drawername']; ?></td>
                         <td class="text-center" width="1%"><?php echo $rowdbs['ch'] ?></td>
@@ -294,7 +394,57 @@ $page = $_GET['page'];
         <br>
     <?php }
 
-    if ($page == "company") { ?>
+    if ($page == "company") {
+
+        $Per_Page = 25;   // Per Page
+        $Page = $_GET["number"];
+        if (!$_GET["number"]) {
+            $Page = 1;
+        }
+        $Page_Start = (($Per_Page * $Page) - $Per_Page);
+
+        $query = "SELECT * FROM `company` LIMIT $Page_Start , $Per_Page";
+        $objQuery = mysqli_query($conn, "SELECT * FROM `company`");
+
+        $Num_Rows = mysqli_num_rows($objQuery);
+        if ($Num_Rows <= $Per_Page) {
+            $Num_Pages = 1;
+        } else if (($Num_Rows % $Per_Page) == 0) {
+            $Num_Pages = ($Num_Rows / $Per_Page);
+        } else {
+            $Num_Pages = ($Num_Rows / $Per_Page) + 1;
+            $Num_Pages = (int)$Num_Pages;
+        }
+
+        $First_Page = min(1, $Page);
+        $Prev_Page = $Page - 1;
+        $Next_Page = $Page + 1;
+        $Last_Page = max($Num_Pages, $Page);
+
+        function get_pagination_links($current_page, $total_pages, $url)
+        {
+            $links = "";
+            if ($total_pages >= 1 && $current_page <= $total_pages) {
+                $links .= "<a href=\"$url?page=company&number=1\">1</a>";
+                $i = max(2, $current_page - 3);
+                if ($i > 2)
+                    $links .= " ... ";
+                for ($i; $i <= min($current_page + 3, $total_pages); $i++) {
+                    if ($current_page == $i) {
+                        $links .=  "<a href=\"$url?page=company&number=$i\"> <b>$i</b> </a>";
+                    }
+                    // elseif ($i == $total_pages) {
+                    //     continue;
+                    // } 
+                    else {
+                        $links .=  "<a href=\"$url?page=company&number=$i\"> $i </a>";
+                    }
+                }
+            }
+            return $links;
+        }
+    ?>
+
         <br />
         <div class="d-flex justify-content-center">
             <form action="in.php" method="post">
@@ -305,6 +455,35 @@ $page = $_GET['page'];
                 <input type="submit" value="เพิ่ม" name="company">
             </form>
 
+        </div>
+        <br>
+        <div style="text-align:center;">
+            <div class="row ">
+                <div class="col-4"></div>
+                <div class="col-4">
+                    <?php
+
+                    if ($Prev_Page) {
+                        echo " <a href='$_SERVER[SCRIPT_NAME]?page=company&number=$First_Page'><< First</a> ";
+                    }
+
+                    if ($Prev_Page) {
+                        echo " <a href='$_SERVER[SCRIPT_NAME]?page=company&number=$Prev_Page'><< Back</a> ";
+                    }
+
+                    echo get_pagination_links($Page, $Num_Pages, $_SERVER['SCRIPT_NAME']);
+
+                    if ($Page != $Num_Pages) {
+                        echo " <a href ='$_SERVER[SCRIPT_NAME]?page=company&number=$Next_Page'>Next>></a> ";
+                    }
+
+                    if ($Page != $Num_Pages) {
+                        echo " <a href ='$_SERVER[SCRIPT_NAME]?page=company&number=$Last_Page'>Last>></a> ";
+                    }
+
+                    ?>
+                </div>
+            </div>
         </div>
         <br>
         <table border='1' width='80%' class="center">
@@ -323,14 +502,14 @@ $page = $_GET['page'];
                 <div style="margin: 10px 2% -10px;text-align:center;"></div>
 
                 <?php
-                $sqldbs = "SELECT * FROM `company`";
-                $resultdbs = mysqli_query($conn, $sqldbs);
+
+                $resultdbs = mysqli_query($conn, $query);
                 while ($rowdbs = $resultdbs->fetch_array()) :
                 ?>
 
                     <tr>
                         <!-- <td class="text-center" width="1%"><a href='editpage.php?company=<?php echo $rowdbs['Companyname'] ?>'><img src='icon/edit.gif' /></button></a></td> -->
-                        <td class="text-center" width="1%"><a href='del.php?company=<?php echo $rowdbs['company'] ?>' onclick="return confirm('ต้องการลบหรือไม่')"><img src='icon/delete.gif' /></a></td>
+                        <td class="text-center" width="1%"><a href='del.php?company=<?php echo $rowdbs['id'] ?>' onclick="return confirm('ต้องการลบหรือไม่')"><img src='icon/delete.gif' /></a></td>
                         <td class="text-center" width="1%"><?php echo $rowdbs['drawercompany']; ?></td>
                         <td class="text-center" width="1%"><?php echo $rowdbs['company']; ?></td>
                     </tr>
@@ -340,6 +519,184 @@ $page = $_GET['page'];
             </tbody>
 
         </table></br>
+        <div style="text-align:center;">
+            <div class="row ">
+                <div class="col-4"></div>
+                <div class="col-4">
+                    <?php
+
+                    if ($Prev_Page) {
+                        echo " <a href='$_SERVER[SCRIPT_NAME]?page=company&number=$First_Page'><< First</a> ";
+                    }
+
+                    if ($Prev_Page) {
+                        echo " <a href='$_SERVER[SCRIPT_NAME]?page=company&number=$Prev_Page'><< Back</a> ";
+                    }
+
+                    echo get_pagination_links($Page, $Num_Pages, $_SERVER['SCRIPT_NAME']);
+
+                    if ($Page != $Num_Pages) {
+                        echo " <a href ='$_SERVER[SCRIPT_NAME]?page=company&number=$Next_Page'>Next>></a> ";
+                    }
+
+                    if ($Page != $Num_Pages) {
+                        echo " <a href ='$_SERVER[SCRIPT_NAME]?page=company&number=$Last_Page'>Last>></a> ";
+                    }
+
+                    ?>
+                </div>
+            </div>
+        </div>
+    <?php
+    }
+
+    if ($page == "tank") {
+        $Per_Page = 25;   // Per Page
+        $Page = $_GET["number"];
+        if (!$_GET["number"]) {
+            $Page = 1;
+        }
+        $Page_Start = (($Per_Page * $Page) - $Per_Page);
+
+        $query = "SELECT * FROM `tank_gas` LIMIT $Page_Start , $Per_Page";
+        $objQuery = mysqli_query($conn, "SELECT * FROM `tank_gas`");
+
+        $Num_Rows = mysqli_num_rows($objQuery);
+        if ($Num_Rows <= $Per_Page) {
+            $Num_Pages = 1;
+        } else if (($Num_Rows % $Per_Page) == 0) {
+            $Num_Pages = ($Num_Rows / $Per_Page);
+        } else {
+            $Num_Pages = ($Num_Rows / $Per_Page) + 1;
+            $Num_Pages = (int)$Num_Pages;
+        }
+
+        $First_Page = min(1, $Page);
+        $Prev_Page = $Page - 1;
+        $Next_Page = $Page + 1;
+        $Last_Page = max($Num_Pages, $Page);
+
+        function get_pagination_links($current_page, $total_pages, $url)
+        {
+            $links = "";
+            if ($total_pages >= 1 && $current_page <= $total_pages) {
+                $links .= "<a href=\"$url?page=tank&number=1\">1</a>";
+                $i = max(2, $current_page - 3);
+                if ($i > 2)
+                    $links .= " ... ";
+                for ($i; $i <= min($current_page + 3, $total_pages); $i++) {
+                    if ($current_page == $i) {
+                        $links .=  "<a href=\"$url?page=tank&number=$i\"> <b>$i</b> </a>";
+                    }
+                    // elseif ($i == $total_pages) {
+                    //     continue;
+                    // } 
+                    else {
+                        $links .=  "<a href=\"$url?page=tank&number=$i\"> $i </a>";
+                    }
+                }
+            }
+            return $links;
+        }
+    ?>
+        <br />
+        <div class="d-flex justify-content-center">
+            <form action="in.php" method="post">
+                <!-- <label for="code">รหัส Shipper:</label>&nbsp;&nbsp;
+                <input type="text" name="code">&nbsp;&nbsp; -->
+                <label for="tank_name">ชื่อ Tank:</label>&nbsp;&nbsp;
+                <input type="text" name="tank_name">&nbsp;&nbsp;
+                <input type="submit" value="เพิ่ม" name="addtank">
+            </form>
+
+        </div>
+        <br>
+        <div style="text-align:center;">
+            <div class="row ">
+                <div class="col-4"></div>
+                <div class="col-4">
+                    <?php
+
+                    if ($Prev_Page) {
+                        echo " <a href='$_SERVER[SCRIPT_NAME]?page=tank&number=$First_Page'><< First</a> ";
+                    }
+
+                    if ($Prev_Page) {
+                        echo " <a href='$_SERVER[SCRIPT_NAME]?page=tank&number=$Prev_Page'><< Back</a> ";
+                    }
+
+                    echo get_pagination_links($Page, $Num_Pages, $_SERVER['SCRIPT_NAME']);
+
+                    if ($Page != $Num_Pages) {
+                        echo " <a href ='$_SERVER[SCRIPT_NAME]?page=tank&number=$Next_Page'>Next>></a> ";
+                    }
+
+                    if ($Page != $Num_Pages) {
+                        echo " <a href ='$_SERVER[SCRIPT_NAME]?page=tank&number=$Last_Page'>Last>></a> ";
+                    }
+
+                    ?>
+                </div>
+            </div>
+        </div>
+        <br>
+        <table border='1' width='80%' class="center">
+
+            <thead>
+
+                <tr>
+                    <!-- <th class="text-center" width="1%">แก้ไข</th> -->
+                    <th class="text-center" width="1%">ลบ</th>
+                    <th class="text-center" width="10%">Tank</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                <div style="margin: 10px 2% -10px;text-align:center;"></div>
+
+                <?php
+                $resultdbs = mysqli_query($conn, $query);
+                while ($rowdbs = $resultdbs->fetch_array()) :
+                ?>
+
+                    <tr>
+                        <td class="text-center" width="1%"><a href='del.php?tank=<?php echo $rowdbs['id'] ?>' onclick="return confirm('ต้องการลบหรือไม่')"><img src='icon/delete.gif' /></a></td>
+                        <td class="text-center" width="1%"><?php echo $rowdbs['tank']; ?></td>
+                    </tr>
+
+                <?php endwhile ?>
+
+            </tbody>
+
+        </table></br>
+        <div style="text-align:center;">
+            <div class="row ">
+                <div class="col-4"></div>
+                <div class="col-4">
+                    <?php
+
+                    if ($Prev_Page) {
+                        echo " <a href='$_SERVER[SCRIPT_NAME]?page=tank&number=$First_Page'><< First</a> ";
+                    }
+
+                    if ($Prev_Page) {
+                        echo " <a href='$_SERVER[SCRIPT_NAME]?page=tank&number=$Prev_Page'><< Back</a> ";
+                    }
+
+                    echo get_pagination_links($Page, $Num_Pages, $_SERVER['SCRIPT_NAME']);
+
+                    if ($Page != $Num_Pages) {
+                        echo " <a href ='$_SERVER[SCRIPT_NAME]?page=tank&number=$Next_Page'>Next>></a> ";
+                    }
+
+                    if ($Page != $Num_Pages) {
+                        echo " <a href ='$_SERVER[SCRIPT_NAME]?page=tank&number=$Last_Page'>Last>></a> ";
+                    }
+
+                    ?>
+                </div>
+            </div>
+        </div>
     <?php
     }
     ?>

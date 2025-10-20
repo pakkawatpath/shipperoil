@@ -44,7 +44,7 @@ include_once "db.php";
                 <button class="btn btn-danger" onclick="window.location.href='body.php?page=homepage&Page=1'"><i class="fa fa-arrow-left"></i> Home</button>
             </div>
             <div class="col">
-                <a href='page.php?page=user'><i class="fa fa-user" style="font-size: 80px;"></i><br>User</a>
+                <a href='page.php?page=user&number=1'><i class="fa fa-user" style="font-size: 80px;"></i><br>User</a>
             </div>
             <div class="col">
                 <a href='page.php?page=oil&number=1'><img src='icon/oil.png' width="82" height="82" /><br>Oil</a>
@@ -53,7 +53,10 @@ include_once "db.php";
                 <a href='page.php?page=oil'>Basename</a> -->
             </div>
             <div class="col">
-                <a href='page.php?page=company'><i class="fa fa-building" style="font-size: 80px;"></i><br>Shipper</a>
+                <a href='page.php?page=company&number=1'><i class="fa fa-building" style="font-size: 80px;"></i><br>Shipper</a>
+            </div>
+            <div class="col">
+                <a href='page.php?page=tank&number=1'><img src='icon/oil-tank.png' width="82" height="82" /><br>Tank</a>
             </div>
             
         </div>

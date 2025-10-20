@@ -25,11 +25,12 @@
         #back {
             margin-top: 20px;
         }
+
         h6 {
             margin-top: 10px;
         }
 
-         /* Chrome, Safari, Edge, Opera */
+        /* Chrome, Safari, Edge, Opera */
         input::-webkit-outer-spin-button,
         input::-webkit-inner-spin-button {
             -webkit-appearance: none;
@@ -157,10 +158,10 @@
 
                     <h6 for="total">Total stock</h6>
                     <input type="number" name="total" placeholder="Total stock" style="width: 140px;" value="<?php echo $row['total']; ?>" required>
-                    
+
                     <h6 for="remark">Remark</h6>
                     <input type="text" name="remark" placeholder="Remark" style="width: 140px;" value="<?php echo $row['remark']; ?>" required>
-                    
+
                     <div style="margin-top: 10px;"></div>
                     <input type="hidden" name="id" value="<?php echo $_GET['addimonth']; ?>">
                     <button type="submit" name="updateaddimonth">Update</button>
@@ -173,86 +174,95 @@
     <?php
     }
 
-    if (isset($_GET['track'])) {
+    if (isset($_GET['truck'])) {
     ?>
         <div id="back" class="col-2">
-            <button class="btn btn-danger" onclick="window.location.href='body.php?page=trackmode'"><i class="fa fa-arrow-left"></i> BACK</button>
+            <button class="btn btn-danger" onclick="history.back()"><i class="fa fa-arrow-left"></i> BACK</button>
             <button class="btn btn-danger" onclick="window.location.reload();"> RESET</button>
         </div>
         <div style="text-align: center;">
             <div style="margin-top: 100px;"></div>
             <?php
-            $sql = 'SELECT * FROM `track` WHERE `id` = ' . $_GET['track'];
+            $sql = 'SELECT * FROM `track` WHERE `id` = ' . $_GET['truck'];
             $result = mysqli_query($conn, $sql);
             while ($row = $result->fetch_assoc()) {
             ?>
                 <form action="update.php" method="post">
-                    <table width="75%" style="margin-left: auto; margin-right: auto;">
-                        <tr>
-                            <td><label for="shipper">Shipper </label></td>
-                            <td><label for="product">Prodect </label></td>
-                            <td><label for="received">Received </label></td>
-                            <td><label for="numberreceived">เลขใบรับสินค้า</label></td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <select name="shipper" id="shipper" required>
-                                    <option value="">--SELECT--</option>
-                                    <?php
-                                    $sql = "SELECT * FROM `company`";
-                                    $query = mysqli_query($conn, $sql);
-                                    while ($rowcom = $query->fetch_array()) {
-                                        if ($rowcom['drawercompany'] == $row['shipper']) {
-                                    ?>
 
-                                            <option value="<?php echo $rowcom['drawercompany'] ?>" selected><?php echo $rowcom['company'] ?></option>
-                                        <?php
-                                        } else {
-                                        ?>
-                                            <option value="<?php echo $rowcom['drawercompany'] ?>"><?php echo $rowcom['company'] ?></option>
-                                    <?php
-                                        }
-                                    }
-                                    ?>
-                                </select>
-                            </td>
-                            <td>
-                                <select name="product" id="product" required>
-                                    <option value="">--------------------SELECT PRODUCT--------------------</option>
+                    <h6>Shipper </h6>
+                    <select name="shipper" id="shipper" required>
+                        <option value="">--SELECT--</option>
+                        <?php
+                        $sql = "SELECT * FROM `company`";
+                        $query = mysqli_query($conn, $sql);
+                        while ($rowcom = $query->fetch_array()) {
+                            if ($rowcom['drawercompany'] == $row['shipper']) {
+                        ?>
 
-                                    <?php
-                                    $sqlproduct = "SELECT * FROM `basename` WHERE `shipper` = '" . $row['shipper'] . "'";
-                                    $queryproduct = mysqli_query($conn, $sqlproduct);
-                                    while ($rowproduct = $queryproduct->fetch_array()) {
-                                        if ($rowproduct['basename'] == $row['basename'] && $rowproduct['drawername'] == $row['drawername'] && $rowproduct['ch'] == $row['ch']) {
-                                    ?>
-                                            <option value="<?php echo $rowproduct['id'] ?>" selected><?php echo $rowproduct['basename'] . " - " . $rowproduct['drawername'] . " - " . $rowproduct['ch'] ?></option>
-                                        <?php
-                                        } else {
-                                        ?>
-                                            <option value="<?php echo $rowproduct['id'] ?>"><?php echo $rowproduct['basename'] . " - " . $rowproduct['drawername'] . " - " . $rowproduct['ch'] ?></option>
-                                        <?php
-                                        }
-                                        ?>
-
-                                    <?php
-                                    }
-                                    ?>
-
-                                </select>
-                            </td>
-                            <td>
-                                <input type="text" name="received" value="<?php echo $row['received']; ?>" required>
-                            </td>
-                            <td>
-                                <input type="text" name="number" value="<?php echo $row['number']; ?>" required>
-                            </td>
-                        </tr>
-                    </table>
-                    <!-- <input type="text" name="product" value="<?php echo $row['product']; ?>"> -->
-                    <input type="hidden" name="id" value="<?php echo $_GET['track']; ?>">
+                                <option value="<?php echo $rowcom['drawercompany'] ?>" selected><?php echo $rowcom['company'] ?></option>
+                            <?php
+                            } else {
+                            ?>
+                                <option value="<?php echo $rowcom['drawercompany'] ?>"><?php echo $rowcom['company'] ?></option>
+                        <?php
+                            }
+                        }
+                        ?>
+                    </select>
                     <div style="margin-top: 10px;"></div>
-                    <button type="submit" name="updatetrack">Update</button>
+
+                    <h6>Prodect </h6>
+                    <select name="product" id="product" required>
+                        <option value="">--------------------SELECT PRODUCT--------------------</option>
+
+                        <?php
+                        $sqlproduct = "SELECT DISTINCT `basename` FROM `basename` WHERE `shipper` = '" . $row['shipper'] . "'";
+                        $queryproduct = mysqli_query($conn, $sqlproduct);
+                        while ($rowproduct = $queryproduct->fetch_array()) {
+                            if ($rowproduct['basename'] == $row['basename']) {
+                        ?>
+                                <option value="<?php echo $rowproduct['basename'] ?>" selected><?php echo $rowproduct['basename']  ?></option>
+                            <?php
+                            } else {
+                            ?>
+                                <option value="<?php echo $rowproduct['basename'] ?>"><?php echo $rowproduct['basename'] ?></option>
+                        <?php
+                            }
+                        }
+                        ?>
+                    </select>
+                    <div style="margin-top: 10px;"></div>
+
+                    <h6>Received </h6>
+                    <input type="text" name="received" value="<?php echo $row['received']; ?>" required>
+                    <div style="margin-top: 10px;"></div>
+
+                    <h6>เลขใบรับสินค้า</h6>
+                    <input type="text" name="number" value="<?php echo $row['number']; ?>" required>
+                    <div style="margin-top: 10px;"></div>
+                    <h6>ถัง</h6>
+                    <select name="tank">
+                        <option value="">--------------------SELECT TANK--------------------</option>
+                        <?php
+                        $sqltank = "SELECT * FROM `tank_gas`";
+                        $querytank = mysqli_query($conn, $sqltank);
+                        while ($rowtank = $querytank->fetch_array()) {
+                            if ($rowtank['tank'] == $row['tank']) {
+                        ?>
+                                <option value="<?php echo $rowtank['tank'] ?>" selected><?php echo $rowtank['tank']  ?></option>
+                            <?php
+                            } else {
+                            ?>
+                                <option value="<?php echo $rowtank['tank'] ?>"><?php echo $rowtank['tank'] ?></option>
+                        <?php
+                            }
+                        }
+                        ?>
+                    </select>
+
+                    <input type="hidden" name="id" value="<?php echo $_GET['truck']; ?>">
+                    <div style="margin-top: 20px;"></div>
+                    <button type="submit" name="updatetruck" class="btn btn-success">Update</button>
                 </form>
             <?php
             }
@@ -264,7 +274,7 @@
     if (isset($_GET['pipeline'])) {
     ?>
         <div id="back" class="col-2">
-            <button class="btn btn-danger" onclick="window.location.href='body.php?page=pipelinemode'"><i class="fa fa-arrow-left"></i> BACK</button>
+            <button class="btn btn-danger" onclick="history.back()"><i class="fa fa-arrow-left"></i> BACK</button>
             <button class="btn btn-danger" onclick="window.location.reload();"> RESET</button>
         </div>
         <div style="text-align: center;">
@@ -275,68 +285,79 @@
             while ($row = $result->fetch_assoc()) {
             ?>
                 <form action="update.php" method="post">
-                    <table width="60%" style="margin-left: auto; margin-right: auto;">
-                        <tr>
-                            <td><label for="shipper">Shipper </label></td>
-                            <td><label for="product">Prodect </label></td>
-                            <td><label for="received">Received </label></td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <select name="shipper" id="shipper" required>
-                                    <option value="">--SELECT--</option>
-                                    <?php
-                                    $sql = "SELECT * FROM `company`";
-                                    $query = mysqli_query($conn, $sql);
-                                    while ($rowcom = $query->fetch_array()) {
-                                        if ($rowcom['drawercompany'] == $row['shipper']) {
-                                    ?>
 
-                                            <option value="<?php echo $rowcom['drawercompany'] ?>" selected><?php echo $rowcom['company'] ?></option>
-                                        <?php
-                                        } else {
-                                        ?>
-                                            <option value="<?php echo $rowcom['drawercompany'] ?>"><?php echo $rowcom['company'] ?></option>
-                                    <?php
-                                        }
-                                    }
-                                    ?>
-                                </select>
-                            </td>
-                            <td>
-                                <select name="product" id="product" required>
-                                    <option value="">--------------------SELECT PRODUCT--------------------</option>
+                    <h6>Shipper </h6>
+                    <select name="shipper" id="shipper" required>
+                        <option value="">--SELECT--</option>
+                        <?php
+                        $sql = "SELECT * FROM `company`";
+                        $query = mysqli_query($conn, $sql);
+                        while ($rowcom = $query->fetch_array()) {
+                            if ($rowcom['drawercompany'] == $row['shipper']) {
+                        ?>
 
-                                    <?php
-                                    $sqlproduct = "SELECT * FROM `basename` WHERE `shipper` = '" . $row['shipper'] . "'";
-                                    $queryproduct = mysqli_query($conn, $sqlproduct);
-                                    while ($rowproduct = $queryproduct->fetch_array()) {
-                                        if ($rowproduct['basename'] == $row['basename'] && $rowproduct['drawername'] == $row['drawername'] && $rowproduct['ch'] == $row['ch']) {
-                                    ?>
-                                            <option value="<?php echo $rowproduct['id'] ?>" selected><?php echo $rowproduct['basename'] . " - " . $rowproduct['drawername'] . " - " . $rowproduct['ch'] ?></option>
-                                        <?php
-                                        } else {
-                                        ?>
-                                            <option value="<?php echo $rowproduct['id'] ?>"><?php echo $rowproduct['basename'] . " - " . $rowproduct['drawername'] . " - " . $rowproduct['ch'] ?></option>
-                                        <?php
-                                        }
-                                        ?>
-
-                                    <?php
-                                    }
-                                    ?>
-
-                                </select>
-                            </td>
-                            <td>
-                                <input type="text" name="received" value="<?php echo $row['received']; ?>" required><br>
-                            </td>
-                        </tr>
-                    </table>
-                    <!-- <input type="text" name="product" value="<?php echo $row['product']; ?>"> -->
-                    <input type="hidden" name="id" value="<?php echo $_GET['pipeline']; ?>">
+                                <option value="<?php echo $rowcom['drawercompany'] ?>" selected><?php echo $rowcom['company'] ?></option>
+                            <?php
+                            } else {
+                            ?>
+                                <option value="<?php echo $rowcom['drawercompany'] ?>"><?php echo $rowcom['company'] ?></option>
+                        <?php
+                            }
+                        }
+                        ?>
+                    </select>
                     <div style="margin-top: 10px;"></div>
-                    <button type="submit" name="updatepipeline">Update</button>
+
+                    <h6>Prodect </h6>
+                    <select name="product" id="product" required>
+                        <option value="">--------------------SELECT PRODUCT--------------------</option>
+
+                        <?php
+                        $sqlproduct = "SELECT DISTINCT `basename` FROM `basename` WHERE `shipper` = '" . $row['shipper'] . "'";
+                        $queryproduct = mysqli_query($conn, $sqlproduct);
+                        while ($rowproduct = $queryproduct->fetch_array()) {
+                            if ($rowproduct['basename'] == $row['basename']) {
+                        ?>
+                                <option value="<?php echo $rowproduct['basename'] ?>" selected><?php echo $rowproduct['basename'] ?></option>
+                            <?php
+                            } else {
+                            ?>
+                                <option value="<?php echo $rowproduct['basename'] ?>"><?php echo $rowproduct['basename'] ?></option>
+                        <?php
+                            }
+                        }
+                        ?>
+                    </select>
+                    <div style="margin-top: 10px;"></div>
+
+                    <h6>Received </h6>
+                    <input type="text" name="received" value="<?php echo $row['received']; ?>" required>
+                    <div style="margin-top: 10px;"></div>
+
+                    <h6>ถัง</h6>
+                    <select name="tank">
+                        <option value="">--------------------SELECT TANK--------------------</option>
+                        <?php
+                        $sqltank = "SELECT * FROM `tank_gas`";
+                        $querytank = mysqli_query($conn, $sqltank);
+                        while ($rowtank = $querytank->fetch_array()) {
+                            if ($rowtank['tank'] == $row['tank']) {
+                        ?>
+                                <option value="<?php echo $rowtank['tank'] ?>" selected><?php echo $rowtank['tank']  ?></option>
+                            <?php
+                            } else {
+                            ?>
+                                <option value="<?php echo $rowtank['tank'] ?>"><?php echo $rowtank['tank'] ?></option>
+                        <?php
+                            }
+                        }
+                        ?>
+                    </select>
+
+                        
+                    <input type="hidden" name="id" value="<?php echo $_GET['pipeline']; ?>">
+                    <div style="margin-top: 20px;"></div>
+                    <button type="submit" name="updatepipeline" class="btn btn-success">Update</button>
                 </form>
             <?php
             }

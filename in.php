@@ -101,22 +101,19 @@ if (isset($_POST['month'])) {
     echo "</script>";
 }
 
-if (isset($_POST['track'])) {
+if (isset($_POST['truck'])) {
     $shipper = $_POST['shipper'];
     $product = $_POST['product'];
     $received = $_POST['received'];
     $numberreceived = $_POST['numberreceived'];
-    $sql = "SELECT * FROM `basename` WHERE `id` = '$product'";
-    $query = mysqli_query($conn, $sql);
-    while ($row = $query->fetch_array()) {
-        $basename = $row['basename'];
-        $drawername = $row['drawername'];
-        $ch = $row['ch'];
-        mysqli_query($conn, "INSERT INTO `track`(`shipper`, `basename`, `drawername`, `ch`, `received`, `number`) VALUES ('$shipper', '$basename', '$drawername', '$ch','$received','$numberreceived')");
-    }
+    $tank = $_POST['tank'];
+
+    $datetime = $_POST['datetime'] . date(" H:i:s");
+
+    mysqli_query($conn, "INSERT INTO `truck`(`shipper`, `basename`, `received`, `number`, `tank`, `datetime`) VALUES ('$shipper', '$product', '$received','$numberreceived', '$tank', '$datetime')");
 
     echo "<script>";
-    echo "window.location.href='body.php?page=trackmode&Page=1'";
+    echo "window.location.href='body.php?page=truckmode&Page=1'";
     echo "</script>";
 }
 
@@ -124,17 +121,21 @@ if (isset($_POST['pipeline'])) {
     $shipper = $_POST['shipper'];
     $product = $_POST['product'];
     $received = $_POST['received'];
+    $tank = $_POST['tank'];
 
-    $sql = "SELECT * FROM `basename` WHERE `id` = '$product'";
-    $query = mysqli_query($conn, $sql);
-    while ($row = $query->fetch_array()) {
-        $basename = $row['basename'];
-        $drawername = $row['drawername'];
-        $ch = $row['ch'];
-        mysqli_query($conn, "INSERT INTO `pipeline`(`shipper`, `basename`, `drawername`, `ch`, `received`) VALUES ('$shipper', '$basename', '$drawername', '$ch','$received')");
-    }
+    $datetime = $_POST['datetime'] . date(" H:i:s");
+
+    mysqli_query($conn, "INSERT INTO `pipeline`(`shipper`, `basename`, `received`, `tank`, `datetime`) VALUES ('$shipper', '$product', '$received', '$tank', '$datetime')");
 
     echo "<script>";
     echo "window.location.href='body.php?page=pipelinemode&Page=1'";
+    echo "</script>";
+}
+
+if (isset($_POST['addtank'])) {
+    $tank = $_POST['tank_name'];
+    mysqli_query($conn, "INSERT INTO `tank_gas`(`tank`) VALUES ('$tank')");
+    echo "<script>";
+    echo "window.location.href='page.php?page=tank&number=1'";
     echo "</script>";
 }

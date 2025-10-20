@@ -87,7 +87,7 @@ $level = $_SESSION["Level"];
             <a href='additive.php?date=1'><i class="fa fa-cog" style="font-size: 80px;"></i><br>Additive</a>
         </div>
         <div class="col">
-            <a href='body.php?page=trackmode&Page=1'><i class="fa fa-truck" style="font-size: 80px;"></i><br>Track Mode</a>
+            <a href='body.php?page=truckmode&Page=1'><i class="fa fa-truck" style="font-size: 80px;"></i><br>Truck Mode</a>
         </div>
         <div class="col">
             <a href='body.php?page=pipelinemode&Page=1'><i class="fa fa-tint" style="font-size: 80px;"></i><br>Pipeline Mode</a>
